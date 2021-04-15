@@ -8,6 +8,9 @@ public class Goal : MonoBehaviour
 	public bool leftGoal = true;
 	public GameManager gameManager;
 
+	public GameObject leftGoalPFX;
+	public GameObject rightGoalPFX;
+
 	private void OnCollisionEnter2D(Collision2D other)
 	{
 		if (other.transform.tag == "Ball")
@@ -16,11 +19,13 @@ public class Goal : MonoBehaviour
 
 			if (leftGoal)
 			{
+				Instantiate(leftGoalPFX, other.contacts[0].point, transform.rotation);
 				scoreboard.RightScoredGoal();
 				gameManager.SetupServeLeft();
 			}
 			else
 			{
+				Instantiate(rightGoalPFX, other.contacts[0].point, transform.rotation);
 				scoreboard.LeftScoredGoal();
 				gameManager.SetupServeRight();
 			}
