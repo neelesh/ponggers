@@ -11,12 +11,15 @@ public class Goal : MonoBehaviour
 	public GameObject leftGoalPFX;
 	public GameObject rightGoalPFX;
 
+	public AudioSource airhorn;
+
 	private void OnCollisionEnter2D(Collision2D other)
 	{
 		if (other.transform.tag == "Ball")
 		{
-			other.gameObject.SetActive(false);
+			airhorn.Play();
 
+			other.gameObject.SetActive(false);
 			if (leftGoal)
 			{
 				Instantiate(leftGoalPFX, other.contacts[0].point, transform.rotation);

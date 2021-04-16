@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PaddleController : MonoBehaviour
 {
+	public GameObject paddleGO;
 	public float speed = 5;
 	public Rigidbody2D rb;
 	public BoxCollider2D boxCollider;
@@ -17,16 +18,32 @@ public class PaddleController : MonoBehaviour
 
 	public bool isServing = false;
 
+	private Vector3 defaultSize;
+	private Vector3 bigPaddleSize;
+	private Vector3 smallPaddleSize;
+
+	private Vector3 targetScale;
+
 	void Start()
 	{
+		defaultSize = paddleGO.transform.localScale;
+		targetScale = defaultSize;
+
+		bigPaddleSize = new Vector3(defaultSize.x, defaultSize.y * 2f, defaultSize.z); ;
+		smallPaddleSize = new Vector3(defaultSize.x, defaultSize.y / 2f, defaultSize.z);
+
 		rb = GetComponent<Rigidbody2D>();
 		boxCollider = GetComponentInChildren<BoxCollider2D>();
 		ballRB = ball.GetComponent<Rigidbody2D>();
 
+		transform.position = new Vector2(transform.position.x, Random.Range(-3f, 3f));
 	}
 
 	void Update()
 	{
+		if (paddleGO.transform.localScale != targetScale) paddleGO.transform.localScale = Vector3.Lerp(paddleGO.transform.localScale, targetScale, Time.deltaTime * 10);
+
+		if (Time.timeScale == 0) return;
 
 		if (isAIPlayer)
 		{
@@ -53,7 +70,7 @@ public class PaddleController : MonoBehaviour
 		}
 
 		// The ball is moving away from us so lets pick a neutral position
-		if (leftPaddle && ballRB.velocity.x > 0)
+		else if (leftPaddle && ballRB.velocity.x > 0)
 		{
 			if (Camera.main.transform.position.y > topY) movement.y = 1;
 			else if (Camera.main.transform.position.y < bottomY) movement.y = -1;
@@ -124,5 +141,16 @@ public class PaddleController : MonoBehaviour
 		else ball.SetVelocity(new Vector2(-ball.initialSpeed, yVelocity));
 
 		isServing = false;
+	}
+
+
+	public void Grow()
+	{
+		targetScale = bigPaddleSize;
+	}
+
+	public void Shrink()
+	{
+		targetScale = smallPaddleSize;
 	}
 }

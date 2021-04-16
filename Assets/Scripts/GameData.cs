@@ -29,9 +29,4 @@ public class GameData : MonoBehaviour
 			DontDestroyOnLoad(this.gameObject);
 		}
 	}
-
-	public void LoadGameplay()
-	{
-		SceneManager.LoadScene("Gameplay");
-	}
 }

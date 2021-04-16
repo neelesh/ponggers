@@ -123,6 +123,55 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &33790837
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 33790838}
+  - component: {fileID: 33790839}
+  m_Layer: 5
+  m_Name: Menu
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &33790838
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 33790837}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2121016314}
+  m_Father: {fileID: 716988245}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &33790839
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 33790837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5abf8ac27e71e641889d69246df099b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &109751819
 GameObject:
   m_ObjectHideFlags: 0
@@ -498,7 +547,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0.000015258789, y: -300}
-  m_SizeDelta: {x: 645.0723, y: 139.01453}
+  m_SizeDelta: {x: 921.9, y: 139.01453}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &367030990
 MonoBehaviour:
@@ -520,7 +569,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PONGGERS
+  m_text: PONNGERS
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e7d014ad7986986468cef6931f0982df, type: 2}
   m_sharedMaterial: {fileID: -7047813288233397137, guid: e7d014ad7986986468cef6931f0982df, type: 2}
@@ -679,7 +728,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 367030989}
-  - {fileID: 2121016314}
+  - {fileID: 33790838}
   m_Father: {fileID: 848606830}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -761,7 +810,7 @@ GameObject:
   - component: {fileID: 775733488}
   - component: {fileID: 775733486}
   m_Layer: 5
-  m_Name: Single Player (1)
+  m_Name: Two Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -831,8 +880,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1115928494}
-        m_TargetAssemblyTypeName: GameData, Assembly-CSharp
+      - m_Target: {fileID: 33790839}
+        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
         m_MethodName: SetTwoPlayer
         m_Mode: 1
         m_Arguments:
@@ -843,8 +892,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1115928494}
-        m_TargetAssemblyTypeName: GameData, Assembly-CSharp
+      - m_Target: {fileID: 33790839}
+        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
         m_MethodName: LoadGameplay
         m_Mode: 1
         m_Arguments:
@@ -1240,8 +1289,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1115928494}
-        m_TargetAssemblyTypeName: GameData, Assembly-CSharp
+      - m_Target: {fileID: 33790839}
+        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
         m_MethodName: SetSinglePlayer
         m_Mode: 1
         m_Arguments:
@@ -1252,8 +1301,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1115928494}
-        m_TargetAssemblyTypeName: GameData, Assembly-CSharp
+      - m_Target: {fileID: 33790839}
+        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
         m_MethodName: LoadGameplay
         m_Mode: 1
         m_Arguments:
@@ -1284,7 +1333,7 @@ GameObject:
   - component: {fileID: 1770961303}
   - component: {fileID: 1770961301}
   m_Layer: 5
-  m_Name: Single Player (2)
+  m_Name: AI vs AI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1354,8 +1403,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1115928494}
-        m_TargetAssemblyTypeName: GameData, Assembly-CSharp
+      - m_Target: {fileID: 33790839}
+        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
         m_MethodName: SetAIvsAI
         m_Mode: 1
         m_Arguments:
@@ -1366,8 +1415,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1115928494}
-        m_TargetAssemblyTypeName: GameData, Assembly-CSharp
+      - m_Target: {fileID: 33790839}
+        m_TargetAssemblyTypeName: Menu, Assembly-CSharp
         m_MethodName: LoadGameplay
         m_Mode: 1
         m_Arguments:
@@ -1702,15 +1751,15 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2121016313}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1709217752}
   - {fileID: 775733485}
   - {fileID: 1770961300}
-  m_Father: {fileID: 716988245}
-  m_RootOrder: 1
+  m_Father: {fileID: 33790838}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}

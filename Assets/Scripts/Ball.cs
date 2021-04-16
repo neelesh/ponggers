@@ -15,10 +15,18 @@ public class Ball : MonoBehaviour
 
 	private Vector2 minSpeedVector;
 	public bool serving = true;
+
+	private Vector3 scale;
+
+	public PaddleController lastPlayer;
+
 	void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
 		// rb.velocity = new Vector2(initialSpeed, initialSpeed);
+
+		scale = transform.localScale;
+
 	}
 
 	public void SetVelocity(Vector2 vector)
@@ -46,5 +54,8 @@ public class Ball : MonoBehaviour
 	public void OnCollisionEnter2D(Collision2D other)
 	{
 		if (other.gameObject.tag != "Goal") Instantiate(ballHitFX, other.contacts[0].point, transform.rotation);
+
+		if (other.gameObject.tag == "Player") lastPlayer = other.gameObject.GetComponentInChildren<PaddleController>();
 	}
+
 }

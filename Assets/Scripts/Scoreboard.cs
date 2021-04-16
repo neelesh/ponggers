@@ -7,8 +7,10 @@ public class Scoreboard : MonoBehaviour
 	public TextMeshProUGUI leftScoreText;
 	public TextMeshProUGUI rightScoreText;
 
-	private int leftScore = 0;
-	private int rightScore = 0;
+	public int leftScore = 0;
+	public int rightScore = 0;
+
+	public GameManager gameManager;
 
 	void Start()
 	{
