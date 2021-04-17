@@ -15,7 +15,20 @@ public class Powerup : MonoBehaviour
 	public bool shrink;
 	public bool speedUp;
 
+	public SpriteRenderer spriteRenderer;
+
 	Ball ball;
+
+	public Sprite growSymbol;
+	public Sprite shrinkSymbol;
+
+	void Start()
+	{
+		spriteRenderer = GetComponent<SpriteRenderer>();
+
+		if (grow) spriteRenderer.sprite = growSymbol;
+		if (shrink) spriteRenderer.sprite = shrinkSymbol;
+	}
 
 	void FixedUpdate()
 	{

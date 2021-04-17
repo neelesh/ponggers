@@ -172,6 +172,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5abf8ac27e71e641889d69246df099b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canPause: 1
+  gameIsPaused: 0
+  pauseMenuGO: {fileID: 0}
 --- !u!1 &109751819
 GameObject:
   m_ObjectHideFlags: 0
@@ -569,7 +572,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: PONNGERS
+  m_text: PONGGERS
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e7d014ad7986986468cef6931f0982df, type: 2}
   m_sharedMaterial: {fileID: -7047813288233397137, guid: e7d014ad7986986468cef6931f0982df, type: 2}

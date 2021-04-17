@@ -146,11 +146,13 @@ public class PaddleController : MonoBehaviour
 
 	public void Grow()
 	{
-		targetScale = bigPaddleSize;
+		if (targetScale == smallPaddleSize) targetScale = defaultSize;
+		else if (targetScale == defaultSize) targetScale = bigPaddleSize;
 	}
 
 	public void Shrink()
 	{
-		targetScale = smallPaddleSize;
+		if (targetScale == defaultSize) targetScale = smallPaddleSize;
+		else if (targetScale == bigPaddleSize) targetScale = defaultSize;
 	}
 }
