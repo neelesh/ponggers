@@ -6,6 +6,10 @@ public class Powerup : MonoBehaviour
 {
 	public GameObject target;
 
+	public GameObject top;
+	public GameObject bottom;
+
+
 	public bool canCollideWithPlayer = false;
 	public bool beenHit = false;
 
@@ -15,6 +19,11 @@ public class Powerup : MonoBehaviour
 	public bool shrink;
 	public bool speedUp;
 
+	public bool topLeftAvantage;
+	public bool bottomLeftAvantage;
+	public bool topRightAvantage;
+	public bool bottomRightAvantage;
+
 	public SpriteRenderer spriteRenderer;
 
 	Ball ball;
@@ -22,12 +31,22 @@ public class Powerup : MonoBehaviour
 	public Sprite growSymbol;
 	public Sprite shrinkSymbol;
 
+	public Sprite topLeftAvantageSprite;
+	public Sprite bottomLeftAvantageSprite;
+	public Sprite topRightAvantageSprite;
+	public Sprite bottomRightAvantageSprite;
+
 	void Start()
 	{
 		spriteRenderer = GetComponent<SpriteRenderer>();
 
 		if (grow) spriteRenderer.sprite = growSymbol;
 		if (shrink) spriteRenderer.sprite = shrinkSymbol;
+
+		if (topLeftAvantage) spriteRenderer.sprite = topLeftAvantageSprite;
+		if (bottomLeftAvantage) spriteRenderer.sprite = bottomLeftAvantageSprite;
+		if (topRightAvantage) spriteRenderer.sprite = topRightAvantageSprite;
+		if (bottomRightAvantage) spriteRenderer.sprite = bottomRightAvantageSprite;
 	}
 
 	void FixedUpdate()
@@ -41,11 +60,25 @@ public class Powerup : MonoBehaviour
 	{
 		if (other.gameObject.tag == "Ball" && beenHit == false)
 		{
-			beenHit = true;
-			canCollideWithPlayer = true;
+			// The powerup has been hit by the ball
 
-			ball = other.gameObject.GetComponent<Ball>();
-			target = ball.lastPlayer.gameObject;
+			beenHit = true;
+
+			if (grow || shrink)
+			{
+				canCollideWithPlayer = true;
+				ball = other.gameObject.GetComponent<Ball>();
+				target = ball.lastPlayer.gameObject;
+			}
+
+			else if (topLeftAvantage || topRightAvantage)
+			{
+				target = top;
+			}
+			else if (bottomLeftAvantage || bottomRightAvantage)
+			{
+				target = bottom;
+			}
 		}
 
 		if (other.gameObject.tag == "Player" && beenHit && canCollideWithPlayer)
@@ -59,6 +92,25 @@ public class Powerup : MonoBehaviour
 			ApplyPowerUp(paddle);
 
 			gameObject.SetActive(false);
+		}
+
+		if (other.gameObject.tag == "Ceiling" && beenHit && (topLeftAvantage || topRightAvantage))
+		{
+			Boundary top = other.GetComponentInParent<Boundary>();
+			// if (top)
+			// {
+			if (topLeftAvantage) top.LeftTargetPosition();
+			else if (topRightAvantage) top.RightTargetPosition();
+			// }
+		}
+		else if (other.gameObject.tag == "Floor" && beenHit && (bottomLeftAvantage || bottomRightAvantage))
+		{
+			Boundary bottom = other.GetComponentInParent<Boundary>();
+			// if (bottom)
+			// {
+			if (bottomLeftAvantage) bottom.LeftTargetPosition();
+			else if (bottomRightAvantage) bottom.RightTargetPosition();
+			// }
 		}
 	}
 
