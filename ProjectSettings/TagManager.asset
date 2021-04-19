@@ -10,7 +10,7 @@ TagManager:
   - Ceiling
   - Floor
   - PowerUp
-  - RespawnPowerUp
+  - KillPlane
   layers:
   - Default
   - TransparentFX

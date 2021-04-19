@@ -16,8 +16,8 @@ public class Powerup : MonoBehaviour
 	public bool beenHit = false;
 
 
-	public float floatingSpeed = 2;
-	public float speed = 20;
+	public float floatingSpeed = 1;
+	public float speed = 10;
 
 
 	public bool grow;
@@ -41,12 +41,20 @@ public class Powerup : MonoBehaviour
 	public Sprite topRightAvantageSprite;
 	public Sprite bottomRightAvantageSprite;
 
+	private Rigidbody2D rigidBody;
+	private Vector2 direction;
+
 	void Start()
 	{
+		rigidBody = GetComponent<Rigidbody2D>();
 
+		SetSprite();
+	}
+
+	void SetSprite()
+	{
 		if (grow) spriteRenderer.sprite = growSymbol;
 		if (shrink) spriteRenderer.sprite = shrinkSymbol;
-
 		if (topLeftAvantage) spriteRenderer.sprite = topLeftAvantageSprite;
 		if (bottomLeftAvantage) spriteRenderer.sprite = bottomLeftAvantageSprite;
 		if (topRightAvantage) spriteRenderer.sprite = topRightAvantageSprite;
@@ -57,19 +65,29 @@ public class Powerup : MonoBehaviour
 	{
 		if (target == null)
 		{
-			float smallStep = floatingSpeed * Time.deltaTime;
-			Vector3 up = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
-			transform.position = Vector3.MoveTowards(transform.position, up, smallStep);
+			// float smallStep = floatingSpeed * Time.deltaTime;
+			// Vector3 up = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+			// transform.position = Vector3.MoveTowards(transform.position, up, smallStep);
+
+			rigidBody.velocity = Vector2.up * floatingSpeed;
 			return;
 		}
+
+		// direction = (target.transform.position - transform.position).normalized;
+		// rigidBody.velocity = direction * speed;
+		rigidBody.velocity = Vector2.zero;
 		float step = speed * Time.deltaTime;
 		transform.position = Vector3.MoveTowards(transform.position, target.transform.position, step);
 	}
 
 	public void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.gameObject.tag == "RespawnPowerUp") powerUpSpawner.Recycle(this.gameObject);
-
+		if (other.gameObject.tag == "KillPlane" && beenHit == false)
+		{
+			Debug.Log("KILL PLANE ON TRIGGER ENTER");
+			powerUpSpawner.Recycle(gameObject);
+		}
+		else
 		if (other.gameObject.tag == "Ball" && beenHit == false)
 		{
 			// The powerup has been hit by the ball
@@ -93,7 +111,7 @@ public class Powerup : MonoBehaviour
 			}
 		}
 
-		if (other.gameObject.tag == "Player" && beenHit && canCollideWithPlayer)
+		else if (other.gameObject.tag == "Player" && beenHit && canCollideWithPlayer)
 		{
 			// spawn a particle effect
 			// spawn sound effect
@@ -103,16 +121,16 @@ public class Powerup : MonoBehaviour
 
 			ApplyPowerUp(paddle);
 
-			gameObject.SetActive(false);
+			powerUpSpawner.Recycle(gameObject);
 		}
 
-		if (other.gameObject.tag == "Ceiling" && beenHit && (topLeftAvantage || topRightAvantage))
+		else if (other.gameObject.tag == "Ceiling" && beenHit && (topLeftAvantage || topRightAvantage))
 		{
 			Boundary top = other.GetComponentInParent<Boundary>();
 			if (topLeftAvantage) top.LeftTargetPosition();
 			else if (topRightAvantage) top.RightTargetPosition();
 
-			gameObject.SetActive(false);
+			powerUpSpawner.Recycle(gameObject);
 		}
 		else if (other.gameObject.tag == "Floor" && beenHit && (bottomLeftAvantage || bottomRightAvantage))
 		{
@@ -120,7 +138,7 @@ public class Powerup : MonoBehaviour
 			if (bottomLeftAvantage) bottom.LeftTargetPosition();
 			else if (bottomRightAvantage) bottom.RightTargetPosition();
 
-			gameObject.SetActive(false);
+			powerUpSpawner.Recycle(gameObject);
 		}
 	}
 
@@ -133,5 +151,8 @@ public class Powerup : MonoBehaviour
 	public void Reset()
 	{
 		target = null;
+		beenHit = false;
+		canCollideWithPlayer = false;
+		rigidBody.velocity = Vector2.zero;
 	}
 }

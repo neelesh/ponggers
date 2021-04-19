@@ -23,17 +23,20 @@ public class PowerUpSpawner : MonoBehaviour
 		waiting = true;
 		yield return new WaitForSeconds(secondsDelay);
 		GameObject spawnPoint = spawnPoints[Random.Range(0, spawnPoints.Count - 1)];
+		GameObject powerUp;
 
-		GameObject powerUp = PickPowerUp();
-
-		powerUp.transform.position = spawnPoint.transform.position;
-		powerUp.SetActive(true);
-
+		powerUp = PickPowerUp();
+		if (powerUp != null)
+		{
+			powerUp.transform.position = spawnPoint.transform.position;
+			powerUp.SetActive(true);
+		}
 		waiting = false;
 	}
 
 	public GameObject PickPowerUp()
 	{
+		if (powerUps.Count == 0) return null;
 		GameObject powerUp = powerUps[Random.Range(0, powerUps.Count - 1)];
 
 		if (powerUp.GetComponent<Powerup>().topLeftAvantage && ceiling.leftAdvantage) PickPowerUp();
@@ -48,7 +51,6 @@ public class PowerUpSpawner : MonoBehaviour
 
 	public void Recycle(GameObject PowerUpGO)
 	{
-		Debug.Log("Recycle is called");
 		PowerUpGO.GetComponent<Powerup>().Reset();
 		PowerUpGO.SetActive(false);
 		powerUps.Add(PowerUpGO);
