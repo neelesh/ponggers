@@ -11,6 +11,10 @@ public class Boundary : MonoBehaviour
 	public GameObject target = null;
 	public static Transform originalTransform;
 
+	public bool neutral = true;
+	public bool leftAdvantage;
+	public bool rightAdvantage;
+
 	void Start()
 	{
 		originalTransform = transform;
@@ -28,10 +32,24 @@ public class Boundary : MonoBehaviour
 	public void LeftTargetPosition()
 	{
 		target = leftAdvantagePosition;
+		leftAdvantage = true;
+		rightAdvantage = false;
+		neutral = false;
 	}
 
 	public void RightTargetPosition()
 	{
 		target = rightAdvantagePosition;
+		leftAdvantage = false;
+		rightAdvantage = true;
+		neutral = false;
+	}
+
+	public void NeutralPosition()
+	{
+		target = rightAdvantagePosition;
+		leftAdvantage = false;
+		rightAdvantage = false;
+		neutral = true;
 	}
 }

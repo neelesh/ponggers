@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Powerup : MonoBehaviour
 {
+	public PowerUpSpawner powerUpSpawner;
+
 	public GameObject target;
 
 	public GameObject top;
@@ -13,7 +15,10 @@ public class Powerup : MonoBehaviour
 	public bool canCollideWithPlayer = false;
 	public bool beenHit = false;
 
+
+	public float floatingSpeed = 2;
 	public float speed = 20;
+
 
 	public bool grow;
 	public bool shrink;
@@ -38,7 +43,6 @@ public class Powerup : MonoBehaviour
 
 	void Start()
 	{
-		spriteRenderer = GetComponent<SpriteRenderer>();
 
 		if (grow) spriteRenderer.sprite = growSymbol;
 		if (shrink) spriteRenderer.sprite = shrinkSymbol;
@@ -51,13 +55,21 @@ public class Powerup : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		if (target == null) return;
+		if (target == null)
+		{
+			float smallStep = floatingSpeed * Time.deltaTime;
+			Vector3 up = new Vector3(transform.position.x, transform.position.y + 1, transform.position.z);
+			transform.position = Vector3.MoveTowards(transform.position, up, smallStep);
+			return;
+		}
 		float step = speed * Time.deltaTime;
 		transform.position = Vector3.MoveTowards(transform.position, target.transform.position, step);
 	}
 
 	public void OnTriggerEnter2D(Collider2D other)
 	{
+		if (other.gameObject.tag == "RespawnPowerUp") powerUpSpawner.Recycle(this.gameObject);
+
 		if (other.gameObject.tag == "Ball" && beenHit == false)
 		{
 			// The powerup has been hit by the ball
@@ -97,20 +109,18 @@ public class Powerup : MonoBehaviour
 		if (other.gameObject.tag == "Ceiling" && beenHit && (topLeftAvantage || topRightAvantage))
 		{
 			Boundary top = other.GetComponentInParent<Boundary>();
-			// if (top)
-			// {
 			if (topLeftAvantage) top.LeftTargetPosition();
 			else if (topRightAvantage) top.RightTargetPosition();
-			// }
+
+			gameObject.SetActive(false);
 		}
 		else if (other.gameObject.tag == "Floor" && beenHit && (bottomLeftAvantage || bottomRightAvantage))
 		{
 			Boundary bottom = other.GetComponentInParent<Boundary>();
-			// if (bottom)
-			// {
 			if (bottomLeftAvantage) bottom.LeftTargetPosition();
 			else if (bottomRightAvantage) bottom.RightTargetPosition();
-			// }
+
+			gameObject.SetActive(false);
 		}
 	}
 
@@ -118,5 +128,10 @@ public class Powerup : MonoBehaviour
 	{
 		if (grow) paddle.Grow();
 		if (shrink) paddle.Shrink();
+	}
+
+	public void Reset()
+	{
+		target = null;
 	}
 }
