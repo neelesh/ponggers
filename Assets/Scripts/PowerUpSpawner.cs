@@ -37,12 +37,13 @@ public class PowerUpSpawner : MonoBehaviour
 	public GameObject PickPowerUp()
 	{
 		if (powerUps.Count == 0) return null;
+		
 		GameObject powerUp = powerUps[Random.Range(0, powerUps.Count - 1)];
 
-		if (powerUp.GetComponent<Powerup>().topLeftAvantage && ceiling.leftAdvantage) PickPowerUp();
-		if (powerUp.GetComponent<Powerup>().topRightAvantage && ceiling.rightAdvantage) PickPowerUp();
-		if (powerUp.GetComponent<Powerup>().bottomLeftAvantage && floor.leftAdvantage) PickPowerUp();
-		if (powerUp.GetComponent<Powerup>().bottomRightAvantage && floor.rightAdvantage) PickPowerUp();
+		// if (powerUp.GetComponent<Powerup>().topLeftAvantage && ceiling.leftAdvantage) PickPowerUp();
+		// if (powerUp.GetComponent<Powerup>().topRightAvantage && ceiling.rightAdvantage) PickPowerUp();
+		// if (powerUp.GetComponent<Powerup>().bottomLeftAvantage && floor.leftAdvantage) PickPowerUp();
+		// if (powerUp.GetComponent<Powerup>().bottomRightAvantage && floor.rightAdvantage) PickPowerUp();
 
 		powerUps.Remove(powerUp);
 		return powerUp;

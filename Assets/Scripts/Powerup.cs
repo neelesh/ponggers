@@ -11,6 +11,11 @@ public class Powerup : MonoBehaviour
 	public GameObject top;
 	public GameObject bottom;
 
+	public Boundary topBoundary;
+	public Boundary bottomBoundary;
+
+	public Color rightColor;
+	public Color leftColor;
 
 	public bool canCollideWithPlayer = false;
 	public bool beenHit = false;
@@ -47,7 +52,6 @@ public class Powerup : MonoBehaviour
 	void Start()
 	{
 		rigidBody = GetComponent<Rigidbody2D>();
-
 		SetSprite();
 	}
 
@@ -59,6 +63,45 @@ public class Powerup : MonoBehaviour
 		if (bottomLeftAvantage) spriteRenderer.sprite = bottomLeftAvantageSprite;
 		if (topRightAvantage) spriteRenderer.sprite = topRightAvantageSprite;
 		if (bottomRightAvantage) spriteRenderer.sprite = bottomRightAvantageSprite;
+	}
+
+	void Update()
+	{
+		Debug.Log("update is on");
+		// If one boundary is already tilted that way, switch to the other way.
+
+		if (topLeftAvantage && topBoundary.leftAdvantage)
+		{
+			topLeftAvantage=false;
+			topRightAvantage=true;
+			spriteRenderer.color = rightColor;
+			SetSprite();
+		}
+
+		else if (topRightAvantage && topBoundary.rightAdvantage)
+		{
+			topLeftAvantage=true;
+			topRightAvantage=false;
+			spriteRenderer.color = leftColor;
+			SetSprite();
+		}
+
+
+		else if (bottomLeftAvantage && bottomBoundary.leftAdvantage)
+		{
+			bottomLeftAvantage=false;
+			bottomRightAvantage=true;
+			spriteRenderer.color = rightColor;
+			SetSprite();
+		}
+
+		else if (bottomRightAvantage && bottomBoundary.rightAdvantage)
+		{
+			bottomLeftAvantage=true;
+			bottomRightAvantage=false;
+			spriteRenderer.color = leftColor;
+			SetSprite();
+		}
 	}
 
 	void FixedUpdate()
