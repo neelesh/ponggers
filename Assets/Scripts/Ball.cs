@@ -55,7 +55,7 @@ public class Ball : MonoBehaviour
 	{
 		if (other.gameObject.tag != "Goal") Instantiate(ballHitFX, other.contacts[0].point, transform.rotation);
 
-		if (other.gameObject.tag == "Player") lastPlayer = other.gameObject.GetComponentInChildren<PaddleController>();
+		if (other.gameObject.tag == "Player") lastPlayer = other.gameObject.GetComponentInParent<PaddleController>();
 	}
 
 }

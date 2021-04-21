@@ -13,13 +13,14 @@ GameObject:
   - component: {fileID: 8249134471916369622}
   - component: {fileID: 8249134471916369623}
   - component: {fileID: 8249134471916369640}
+  - component: {fileID: 1547976062}
   m_Layer: 0
   m_Name: Top - Right Advantage
   m_TagString: PowerUp
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8249134471916369641
 Transform:
   m_ObjectHideFlags: 0
@@ -50,13 +51,19 @@ MonoBehaviour:
   target: {fileID: 0}
   top: {fileID: 0}
   bottom: {fileID: 0}
+  topBoundary: {fileID: 0}
+  bottomBoundary: {fileID: 0}
+  left: {fileID: 0}
+  right: {fileID: 0}
+  rightColor: {r: 0.5921569, g: 0.8745098, b: 0.99607843, a: 1}
+  leftColor: {r: 0.99607843, g: 0.26666668, b: 0.20784314, a: 1}
   canCollideWithPlayer: 0
   beenHit: 0
-  floatingSpeed: 2
-  speed: 20
+  floatingSpeed: 1
+  speed: 1000
   grow: 0
   shrink: 0
-  speedUp: 0
+  reset: 0
   topLeftAvantage: 0
   bottomLeftAvantage: 0
   topRightAvantage: 1
@@ -64,6 +71,7 @@ MonoBehaviour:
   spriteRenderer: {fileID: 8249134471916369622}
   growSymbol: {fileID: 21300000, guid: a07c88cf74015fe409856e407dd2b207, type: 3}
   shrinkSymbol: {fileID: 21300000, guid: 8d66a42d972c1fe4c9aeaca9ed769107, type: 3}
+  resetSymbol: {fileID: 21300000, guid: 5f8874d5832ca8c4eb3013784525244a, type: 3}
   topLeftAvantageSprite: {fileID: 21300000, guid: 330e324de42a4e441a3e0386450f9ef8, type: 3}
   bottomLeftAvantageSprite: {fileID: 21300000, guid: 62caeff7e929e6341addf18a72d33be4, type: 3}
   topRightAvantageSprite: {fileID: 21300000, guid: 1d686c865297d584ab4b2019ec67a7e5, type: 3}
@@ -170,4 +178,25 @@ MonoBehaviour:
   - {x: -0.5, y: 0.5, z: 0}
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
-  m_InstanceId: -1248
+  m_InstanceId: -42776
+--- !u!50 &1547976062
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8249134471916369642}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4

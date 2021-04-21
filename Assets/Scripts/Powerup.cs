@@ -14,6 +14,9 @@ public class Powerup : MonoBehaviour
 	public Boundary topBoundary;
 	public Boundary bottomBoundary;
 
+	public PaddleController left;
+	public PaddleController right;
+
 	public Color rightColor;
 	public Color leftColor;
 
@@ -27,8 +30,9 @@ public class Powerup : MonoBehaviour
 
 	public bool grow;
 	public bool shrink;
-	public bool speedUp;
+	public bool reset;
 
+	public bool wallTilting;
 	public bool topLeftAvantage;
 	public bool bottomLeftAvantage;
 	public bool topRightAvantage;
@@ -40,14 +44,19 @@ public class Powerup : MonoBehaviour
 
 	public Sprite growSymbol;
 	public Sprite shrinkSymbol;
+	public Sprite resetSymbol;
 
 	public Sprite topLeftAvantageSprite;
 	public Sprite bottomLeftAvantageSprite;
 	public Sprite topRightAvantageSprite;
 	public Sprite bottomRightAvantageSprite;
 
+
 	private Rigidbody2D rigidBody;
 	private Vector2 direction;
+
+
+
 
 	void Start()
 	{
@@ -59,29 +68,75 @@ public class Powerup : MonoBehaviour
 	{
 		if (grow) spriteRenderer.sprite = growSymbol;
 		if (shrink) spriteRenderer.sprite = shrinkSymbol;
+		if (reset) spriteRenderer.sprite = resetSymbol;
+
+
 		if (topLeftAvantage) spriteRenderer.sprite = topLeftAvantageSprite;
 		if (bottomLeftAvantage) spriteRenderer.sprite = bottomLeftAvantageSprite;
 		if (topRightAvantage) spriteRenderer.sprite = topRightAvantageSprite;
 		if (bottomRightAvantage) spriteRenderer.sprite = bottomRightAvantageSprite;
+
+		if (topLeftAvantage | bottomLeftAvantage) spriteRenderer.color = leftColor;
+		if (topRightAvantage | bottomRightAvantage) spriteRenderer.color = rightColor;
 	}
 
 	void Update()
 	{
-		Debug.Log("update is on");
 		// If one boundary is already tilted that way, switch to the other way.
+
+		if (wallTilting && topBoundary.neutral && bottomBoundary.neutral && !(topLeftAvantage | topRightAvantage | bottomLeftAvantage | bottomRightAvantage))
+		{
+			int number = Random.Range(1, 4);
+
+			switch (number)
+			{
+				case 1:
+					topLeftAvantage = true;
+					topRightAvantage = false;
+					bottomLeftAvantage = false;
+					bottomRightAvantage = false;
+					break;
+				case 2:
+					topLeftAvantage = false;
+					topRightAvantage = true;
+					bottomLeftAvantage = false;
+					bottomRightAvantage = false;
+					break;
+				case 3:
+					topLeftAvantage = false;
+					topRightAvantage = false;
+					bottomLeftAvantage = true;
+					bottomRightAvantage = false;
+					break;
+				case 4:
+					topLeftAvantage = false;
+					topRightAvantage = false;
+					bottomLeftAvantage = false;
+					bottomRightAvantage = true;
+					break;
+				default:
+					topLeftAvantage = true;
+					topRightAvantage = false;
+					bottomLeftAvantage = false;
+					bottomRightAvantage = false;
+					break;
+			}
+
+			SetSprite();
+		}
 
 		if (topLeftAvantage && topBoundary.leftAdvantage)
 		{
-			topLeftAvantage=false;
-			topRightAvantage=true;
+			topLeftAvantage = false;
+			topRightAvantage = true;
 			spriteRenderer.color = rightColor;
 			SetSprite();
 		}
 
 		else if (topRightAvantage && topBoundary.rightAdvantage)
 		{
-			topLeftAvantage=true;
-			topRightAvantage=false;
+			topLeftAvantage = true;
+			topRightAvantage = false;
 			spriteRenderer.color = leftColor;
 			SetSprite();
 		}
@@ -89,16 +144,16 @@ public class Powerup : MonoBehaviour
 
 		else if (bottomLeftAvantage && bottomBoundary.leftAdvantage)
 		{
-			bottomLeftAvantage=false;
-			bottomRightAvantage=true;
+			bottomLeftAvantage = false;
+			bottomRightAvantage = true;
 			spriteRenderer.color = rightColor;
 			SetSprite();
 		}
 
 		else if (bottomRightAvantage && bottomBoundary.rightAdvantage)
 		{
-			bottomLeftAvantage=true;
-			bottomRightAvantage=false;
+			bottomLeftAvantage = true;
+			bottomRightAvantage = false;
 			spriteRenderer.color = leftColor;
 			SetSprite();
 		}
@@ -116,22 +171,21 @@ public class Powerup : MonoBehaviour
 			return;
 		}
 
-		// direction = (target.transform.position - transform.position).normalized;
-		// rigidBody.velocity = direction * speed;
-		rigidBody.velocity = Vector2.zero;
-		float step = speed * Time.deltaTime;
-		transform.position = Vector3.MoveTowards(transform.position, target.transform.position, step);
+		direction = (target.transform.position - transform.position);
+		direction.Normalize();
+		rigidBody.velocity = direction * speed;
+		// rigidBody.velocity = Vector2.zero;
+		// float step = speed * Time.deltaTime;
+		// transform.position = Vector3.MoveTowards(transform.position, target.transform.position, step);
 	}
 
-	public void OnTriggerEnter2D(Collider2D other)
+	public void OnTriggerStay2D(Collider2D other)
 	{
 		if (other.gameObject.tag == "KillPlane" && beenHit == false)
 		{
-			Debug.Log("KILL PLANE ON TRIGGER ENTER");
 			powerUpSpawner.Recycle(gameObject);
 		}
-		else
-		if (other.gameObject.tag == "Ball" && beenHit == false)
+		else if (other.gameObject.tag == "Ball" && beenHit == false)
 		{
 			// The powerup has been hit by the ball
 
@@ -152,15 +206,19 @@ public class Powerup : MonoBehaviour
 			{
 				target = bottom;
 			}
+
+			else if (reset)
+			{
+				ResetLevel();
+			}
 		}
 
 		else if (other.gameObject.tag == "Player" && beenHit && canCollideWithPlayer)
 		{
-			// spawn a particle effect
-			// spawn sound effect
 
-			PaddleController paddle = ball.lastPlayer;
-			if (paddle == null) return;
+			Debug.Log("SIZE POWERUP");
+
+			PaddleController paddle = other.gameObject.GetComponentInParent<PaddleController>();
 
 			ApplyPowerUp(paddle);
 
@@ -191,6 +249,28 @@ public class Powerup : MonoBehaviour
 		if (shrink) paddle.Shrink();
 	}
 
+
+	public void ResetLevel()
+	{
+		bottomBoundary.NeutralPosition();
+		topBoundary.NeutralPosition();
+		left.NormalSize();
+		right.NormalSize();
+
+		// Remove all the powerups on the screen
+		var powerUps = GameObject.FindGameObjectsWithTag("PowerUp");
+		foreach (GameObject go in powerUps)
+		{
+			if (go == this.gameObject) continue;
+
+			Powerup p = go.GetComponent<Powerup>();
+			p.powerUpSpawner.Recycle(go);
+		}
+
+		powerUpSpawner.Recycle(gameObject);
+	}
+
+	// This Resets The Powerup
 	public void Reset()
 	{
 		target = null;
@@ -198,4 +278,6 @@ public class Powerup : MonoBehaviour
 		canCollideWithPlayer = false;
 		rigidBody.velocity = Vector2.zero;
 	}
+
+
 }

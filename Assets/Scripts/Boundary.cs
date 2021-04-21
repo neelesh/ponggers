@@ -9,7 +9,7 @@ public class Boundary : MonoBehaviour
 
 	public float speed = 10f;
 	public GameObject target = null;
-	public static Transform originalTransform;
+	public static GameObject originalTransform;
 
 	public bool neutral = true;
 	public bool leftAdvantage;
@@ -17,7 +17,9 @@ public class Boundary : MonoBehaviour
 
 	void Start()
 	{
-		originalTransform = transform;
+		originalTransform = new GameObject();
+		originalTransform.transform.position = transform.position;
+		originalTransform.transform.rotation = transform.rotation;
 	}
 
 	void FixedUpdate()
@@ -47,7 +49,7 @@ public class Boundary : MonoBehaviour
 
 	public void NeutralPosition()
 	{
-		target = rightAdvantagePosition;
+		target = originalTransform;
 		leftAdvantage = false;
 		rightAdvantage = false;
 		neutral = true;
