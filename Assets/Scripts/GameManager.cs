@@ -20,8 +20,12 @@ public class GameManager : MonoBehaviour
 
 	public GameObject replayMenu;
 
+	public int targetFrameRate = 60;
+
 	void Awake()
 	{
+		Application.targetFrameRate = targetFrameRate;
+
 		Time.timeScale = 1f;
 		if (Instance != null && Instance != this)
 		{

@@ -31,6 +31,7 @@ public class Powerup : MonoBehaviour
 	public bool grow;
 	public bool shrink;
 	public bool reset;
+	public bool multiball;
 
 	public bool wallTilting;
 	public bool topLeftAvantage;
@@ -41,6 +42,7 @@ public class Powerup : MonoBehaviour
 	public SpriteRenderer spriteRenderer;
 
 	Ball ball;
+	public GameObject ballPrefab;
 
 	public Sprite growSymbol;
 	public Sprite shrinkSymbol;
@@ -210,6 +212,17 @@ public class Powerup : MonoBehaviour
 			else if (reset)
 			{
 				ResetLevel();
+			}
+			else if(multiball)
+			{
+				ball = other.gameObject.GetComponent<Ball>();
+				
+				GameObject newBall = GameObject.Instantiate(ballPrefab);
+				Rigidbody2D ballRb = ball.gameObject.GetComponent<Rigidbody2D>();
+				Rigidbody2D newBallRb = newBall.GetComponent<Rigidbody2D>();
+				newBall.transform.position = ball.transform.position;
+				newBallRb.velocity = -ballRb.velocity;
+				powerUpSpawner.Recycle(gameObject);
 			}
 		}
 
