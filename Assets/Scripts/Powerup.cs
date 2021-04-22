@@ -84,46 +84,46 @@ public class Powerup : MonoBehaviour
 	{
 		// If one boundary is already tilted that way, switch to the other way.
 
-		if (wallTilting && topBoundary.neutral && bottomBoundary.neutral && !(topLeftAvantage | topRightAvantage | bottomLeftAvantage | bottomRightAvantage))
-		{
-			int number = Random.Range(1, 4);
+		// if (wallTilting && topBoundary.neutral && bottomBoundary.neutral && !(topLeftAvantage | topRightAvantage | bottomLeftAvantage | bottomRightAvantage))
+		// {
+		// 	int number = Random.Range(1, 4);
 
-			switch (number)
-			{
-				case 1:
-					topLeftAvantage = true;
-					topRightAvantage = false;
-					bottomLeftAvantage = false;
-					bottomRightAvantage = false;
-					break;
-				case 2:
-					topLeftAvantage = false;
-					topRightAvantage = true;
-					bottomLeftAvantage = false;
-					bottomRightAvantage = false;
-					break;
-				case 3:
-					topLeftAvantage = false;
-					topRightAvantage = false;
-					bottomLeftAvantage = true;
-					bottomRightAvantage = false;
-					break;
-				case 4:
-					topLeftAvantage = false;
-					topRightAvantage = false;
-					bottomLeftAvantage = false;
-					bottomRightAvantage = true;
-					break;
-				default:
-					topLeftAvantage = true;
-					topRightAvantage = false;
-					bottomLeftAvantage = false;
-					bottomRightAvantage = false;
-					break;
-			}
+		// 	switch (number)
+		// 	{
+		// 		case 1:
+		// 			topLeftAvantage = true;
+		// 			topRightAvantage = false;
+		// 			bottomLeftAvantage = false;
+		// 			bottomRightAvantage = false;
+		// 			break;
+		// 		case 2:
+		// 			topLeftAvantage = false;
+		// 			topRightAvantage = true;
+		// 			bottomLeftAvantage = false;
+		// 			bottomRightAvantage = false;
+		// 			break;
+		// 		case 3:
+		// 			topLeftAvantage = false;
+		// 			topRightAvantage = false;
+		// 			bottomLeftAvantage = true;
+		// 			bottomRightAvantage = false;
+		// 			break;
+		// 		case 4:
+		// 			topLeftAvantage = false;
+		// 			topRightAvantage = false;
+		// 			bottomLeftAvantage = false;
+		// 			bottomRightAvantage = true;
+		// 			break;
+		// 		default:
+		// 			topLeftAvantage = true;
+		// 			topRightAvantage = false;
+		// 			bottomLeftAvantage = false;
+		// 			bottomRightAvantage = false;
+		// 			break;
+		// 	}
 
-			SetSprite();
-		}
+		// 	SetSprite();
+		// }
 
 		if (topLeftAvantage && topBoundary.leftAdvantage)
 		{
