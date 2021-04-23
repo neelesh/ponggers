@@ -6,7 +6,6 @@ public class Ball : MonoBehaviour
 {
 	public GameObject ballHitFX;
 
-
 	Rigidbody2D rb;
 	public float initialSpeed = 5;
 	public float maxSpeed = 20;
@@ -57,5 +56,4 @@ public class Ball : MonoBehaviour
 
 		if (other.gameObject.tag == "Player") lastPlayer = other.gameObject.GetComponentInParent<PaddleController>();
 	}
-
 }

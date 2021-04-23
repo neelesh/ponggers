@@ -24,13 +24,15 @@ public class PaddleController : MonoBehaviour
 
 	private Vector3 targetScale;
 
+	public GameManager gameManager;
+
 	void Start()
 	{
 		defaultSize = paddleGO.transform.localScale;
 		targetScale = defaultSize;
 
 		bigPaddleSize = new Vector3(defaultSize.x, defaultSize.y * 2f, defaultSize.z); ;
-		smallPaddleSize = new Vector3(defaultSize.x, defaultSize.y / 2f, defaultSize.z);
+		smallPaddleSize = new Vector3(defaultSize.x, defaultSize.y / 1.5f, defaultSize.z);
 
 		rb = GetComponent<Rigidbody2D>();
 		boxCollider = GetComponentInChildren<BoxCollider2D>();
@@ -58,6 +60,8 @@ public class PaddleController : MonoBehaviour
 	private void SimulatePlayer()
 	{
 		Bounds boxBounds = boxCollider.bounds;
+		GameObject closestBall = gameManager.GetClosestBall(gameObject);
+		ballRB = closestBall.GetComponent<Rigidbody2D>();
 
 		float topY = boxBounds.center.y + boxBounds.extents.y;
 		float bottomY = boxBounds.center.y - boxBounds.extents.y;
@@ -86,14 +90,14 @@ public class PaddleController : MonoBehaviour
 		}
 
 		// too far to bother
-		if (Vector2.Distance(ball.transform.position, gameObject.transform.position) > 10)
+		if (Vector2.Distance(closestBall.transform.position, gameObject.transform.position) > 10)
 		{
 			movement.y = 0;
 			return;
 		}
 
-		if (ball.transform.position.y > topY) movement.y = 1;
-		else if (ball.transform.position.y < bottomY) movement.y = -1;
+		if (closestBall.transform.position.y > topY) movement.y = 1;
+		else if (closestBall.transform.position.y < bottomY) movement.y = -1;
 		// else movement.y = 0;
 	}
 

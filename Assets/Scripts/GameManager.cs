@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 	public Ball ball;
+	public List<GameObject> ballClones;
 
 	public PaddleController leftPaddle;
 	public PaddleController rightPaddle;
@@ -117,6 +118,41 @@ public class GameManager : MonoBehaviour
 		countDown.text = "";
 
 		paddle.ServeBall(ball);
+	}
+
+	public void AddBallClone(GameObject ball)
+	{
+		ballClones.Add(ball);
+	}
+
+	public GameObject GetClosestBall(GameObject go)
+	{
+		GameObject closest = ball.gameObject;
+		float distance = 10000;
+
+		foreach(GameObject b in ballClones)
+		{
+			Debug.Log(Vector2.Distance(b.transform.position, go.transform.position) ) ;
+			if( Vector2.Distance(b.transform.position, go.transform.position) < distance)
+			{
+				closest = b;
+				distance = Vector2.Distance(b.transform.position, go.transform.position);
+			}
+		}
+
+		if(Vector2.Distance(ball.gameObject.transform.position, go.transform.position) < distance) closest = ball.gameObject;
+
+		return closest;
+	}
+
+	public void DestroyBallClones()
+	{
+		foreach(GameObject go in ballClones)
+		{
+			Destroy(go);
+		}
+
+		ballClones.Clear();;
 	}
 
 

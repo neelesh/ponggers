@@ -20,6 +20,8 @@ public class Goal : MonoBehaviour
 			airhorn.Play();
 
 			other.gameObject.SetActive(false);
+			gameManager.DestroyBallClones();
+
 			if (leftGoal)
 			{
 				Instantiate(leftGoalPFX, other.contacts[0].point, transform.rotation);

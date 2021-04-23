@@ -57,7 +57,7 @@ public class Powerup : MonoBehaviour
 	private Rigidbody2D rigidBody;
 	private Vector2 direction;
 
-
+	public GameManager gameManager;
 
 
 	void Start()
@@ -218,6 +218,8 @@ public class Powerup : MonoBehaviour
 				ball = other.gameObject.GetComponent<Ball>();
 				
 				GameObject newBall = GameObject.Instantiate(ballPrefab);
+				gameManager.AddBallClone(newBall);
+
 				Rigidbody2D ballRb = ball.gameObject.GetComponent<Rigidbody2D>();
 				Rigidbody2D newBallRb = newBall.GetComponent<Rigidbody2D>();
 				newBall.transform.position = ball.transform.position;
