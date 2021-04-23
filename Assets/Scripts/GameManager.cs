@@ -132,15 +132,14 @@ public class GameManager : MonoBehaviour
 
 		foreach(GameObject b in ballClones)
 		{
-			Debug.Log(Vector2.Distance(b.transform.position, go.transform.position) ) ;
-			if( Vector2.Distance(b.transform.position, go.transform.position) < distance)
+			if( Mathf.Abs(b.transform.position.x - go.transform.position.x) < distance)
 			{
 				closest = b;
-				distance = Vector2.Distance(b.transform.position, go.transform.position);
+				distance = Mathf.Abs(b.transform.position.x - go.transform.position.x);
 			}
 		}
 
-		if(Vector2.Distance(ball.gameObject.transform.position, go.transform.position) < distance) closest = ball.gameObject;
+		if(Mathf.Abs(ball.gameObject.transform.position.x - go.transform.position.x) < distance) closest = ball.gameObject;
 
 		return closest;
 	}

@@ -267,6 +267,8 @@ public class Powerup : MonoBehaviour
 
 	public void ResetLevel()
 	{
+		gameManager.DestroyBallClones();
+
 		bottomBoundary.NeutralPosition();
 		topBoundary.NeutralPosition();
 		left.NormalSize();
