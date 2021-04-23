@@ -53,11 +53,15 @@ public class Powerup : MonoBehaviour
 	public Sprite topRightAvantageSprite;
 	public Sprite bottomRightAvantageSprite;
 
+	public GameObject hitParticleEffect;
+
+	public GameManager gameManager;
 
 	private Rigidbody2D rigidBody;
 	private Vector2 direction;
 
-	public GameManager gameManager;
+
+
 
 
 	void Start()
@@ -191,6 +195,8 @@ public class Powerup : MonoBehaviour
 		{
 			// The powerup has been hit by the ball
 
+			Instantiate(hitParticleEffect, transform.position, transform.rotation);
+
 			beenHit = true;
 
 			if (grow || shrink)
@@ -213,10 +219,10 @@ public class Powerup : MonoBehaviour
 			{
 				ResetLevel();
 			}
-			else if(multiball)
+			else if (multiball)
 			{
 				ball = other.gameObject.GetComponent<Ball>();
-				
+
 				GameObject newBall = GameObject.Instantiate(ballPrefab);
 				gameManager.AddBallClone(newBall);
 
@@ -230,8 +236,7 @@ public class Powerup : MonoBehaviour
 
 		else if (other.gameObject.tag == "Player" && beenHit && canCollideWithPlayer)
 		{
-
-			Debug.Log("SIZE POWERUP");
+			InstantiateParticleEffectWithoutSound();
 
 			PaddleController paddle = other.gameObject.GetComponentInParent<PaddleController>();
 
@@ -242,6 +247,8 @@ public class Powerup : MonoBehaviour
 
 		else if (other.gameObject.tag == "Ceiling" && beenHit && (topLeftAvantage || topRightAvantage))
 		{
+			InstantiateParticleEffectWithoutSound();
+
 			Boundary top = other.GetComponentInParent<Boundary>();
 			if (topLeftAvantage) top.LeftTargetPosition();
 			else if (topRightAvantage) top.RightTargetPosition();
@@ -250,12 +257,21 @@ public class Powerup : MonoBehaviour
 		}
 		else if (other.gameObject.tag == "Floor" && beenHit && (bottomLeftAvantage || bottomRightAvantage))
 		{
+			InstantiateParticleEffectWithoutSound();
+
 			Boundary bottom = other.GetComponentInParent<Boundary>();
 			if (bottomLeftAvantage) bottom.LeftTargetPosition();
 			else if (bottomRightAvantage) bottom.RightTargetPosition();
 
 			powerUpSpawner.Recycle(gameObject);
 		}
+	}
+
+	public void InstantiateParticleEffectWithoutSound()
+	{
+		var particle = Instantiate(hitParticleEffect, transform.position, transform.rotation);
+		AudioSource audio = particle.GetComponent<AudioSource>();
+		audio.enabled = false;
 	}
 
 	public void ApplyPowerUp(PaddleController paddle)
@@ -281,6 +297,7 @@ public class Powerup : MonoBehaviour
 			if (go == this.gameObject) continue;
 
 			Powerup p = go.GetComponent<Powerup>();
+			p.InstantiateParticleEffectWithoutSound();
 			p.powerUpSpawner.Recycle(go);
 		}
 

@@ -189,7 +189,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballHitFX: {fileID: 3496099907980672790, guid: e437d6166e6bab34588e54955599b8b1, type: 3}
   initialSpeed: 5
-  maxSpeed: 8
+  maxSpeed: 12
   minSpeed: 3
   serving: 1
   lastPlayer: {fileID: 0}
