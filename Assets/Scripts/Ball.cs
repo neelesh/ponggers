@@ -52,7 +52,12 @@ public class Ball : MonoBehaviour
 
 	public void OnCollisionEnter2D(Collision2D other)
 	{
-		if (other.gameObject.tag != "Goal") Instantiate(ballHitFX, other.contacts[0].point, transform.rotation);
+		if (other.gameObject.tag != "Goal")
+		{
+			GameObject fx = Instantiate(ballHitFX, other.contacts[0].point, transform.rotation);
+			AudioSource sound = fx.GetComponent<AudioSource>();
+			if (sound) sound.pitch += rb.velocity.magnitude / maxSpeed;
+		}
 
 		if (other.gameObject.tag == "Player") lastPlayer = other.gameObject.GetComponentInParent<PaddleController>();
 	}

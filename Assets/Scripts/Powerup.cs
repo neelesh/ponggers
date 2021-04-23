@@ -195,7 +195,12 @@ public class Powerup : MonoBehaviour
 		{
 			// The powerup has been hit by the ball
 
-			Instantiate(hitParticleEffect, transform.position, transform.rotation);
+			GameObject pfx = Instantiate(hitParticleEffect, transform.position, transform.rotation);
+			if (wallTilting)
+			{
+				ParticleSystem particleSystem = pfx.GetComponent<ParticleSystem>();
+				particleSystem.startColor = spriteRenderer.color;
+			}
 
 			beenHit = true;
 
@@ -269,8 +274,13 @@ public class Powerup : MonoBehaviour
 
 	public void InstantiateParticleEffectWithoutSound()
 	{
-		var particle = Instantiate(hitParticleEffect, transform.position, transform.rotation);
-		AudioSource audio = particle.GetComponent<AudioSource>();
+		var pfx = Instantiate(hitParticleEffect, transform.position, transform.rotation);
+		if (wallTilting)
+		{
+			ParticleSystem particleSystem = pfx.GetComponent<ParticleSystem>();
+			particleSystem.startColor = spriteRenderer.color;
+		}
+		AudioSource audio = pfx.GetComponent<AudioSource>();
 		audio.enabled = false;
 	}
 
