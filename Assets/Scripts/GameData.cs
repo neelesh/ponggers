@@ -11,6 +11,9 @@ public class GameData : MonoBehaviour
 	public enum GameMode { SinglePlayer, TwoPlayer, AIvsAI }
 	public GameMode gameMode;
 
+	public float MusicVolume { get; internal set; } = 0.6f;
+	public float SfxVolume { get; internal set; } = 0.6f;
+
 	public void SetSinglePlayer() => gameMode = GameMode.SinglePlayer;
 	public void SetTwoPlayer() => gameMode = GameMode.TwoPlayer;
 	public void SetAIvsAI() => gameMode = GameMode.AIvsAI;

@@ -10,12 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 3496099907980672789}
   - component: {fileID: 2120709422392531557}
+  - component: {fileID: 8846272459327372817}
   - component: {fileID: 2603506259401726874}
   - component: {fileID: 3496099907980672788}
   - component: {fileID: 3496099907980672791}
   m_Layer: 0
   m_Name: ball hit
-  m_TagString: Untagged
+  m_TagString: SFX
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -47,6 +48,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   countDownSecs: 5
+--- !u!114 &8846272459327372817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3496099907980672790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac0f29d6ca8a05e43b4447bfcf7f2e99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!82 &2603506259401726874
 AudioSource:
   m_ObjectHideFlags: 0

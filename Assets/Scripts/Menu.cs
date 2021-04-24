@@ -46,6 +46,8 @@ public class Menu : MonoBehaviour
 	public void ResumeGame()
 	{
 		gameIsPaused = false;
+		pauseMenuGO.SetActive(false);
+		Time.timeScale = timeScaleBeforePause;
 	}
 
 	public void SetCanPause(bool canPause)

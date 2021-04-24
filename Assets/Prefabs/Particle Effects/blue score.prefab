@@ -10,7 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7928711317137248795}
   - component: {fileID: 1018920520410097194}
+  - component: {fileID: 141184307576325487}
   - component: {fileID: 3802431034834807656}
+  - component: {fileID: 8193644979261745148}
   m_Layer: 0
   m_Name: blue score
   m_TagString: Untagged
@@ -4797,6 +4799,18 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!114 &141184307576325487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4421521666263049205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac0f29d6ca8a05e43b4447bfcf7f2e99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!199 &3802431034834807656
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -4864,6 +4878,19 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &8193644979261745148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4421521666263049205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4c5a7c10e447d84f8edd24e4bd86d63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  countDownSecs: 5
 --- !u!1 &6628130495295562738
 GameObject:
   m_ObjectHideFlags: 0
