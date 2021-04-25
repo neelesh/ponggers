@@ -10,6 +10,11 @@ public class Ball : MonoBehaviour
 	public float initialSpeed = 5;
 	public float maxSpeed = 20;
 	public float minSpeed = 2;
+	public float fireballSpeed = 18;
+
+
+	public bool fireball = false;
+
 
 
 	private Vector2 minSpeedVector;
@@ -19,13 +24,24 @@ public class Ball : MonoBehaviour
 
 	public PaddleController lastPlayer;
 
+
+	public ParticleSystem firePFX;
+
 	void Awake()
 	{
 		rb = GetComponent<Rigidbody2D>();
 		// rb.velocity = new Vector2(initialSpeed, initialSpeed);
 
 		scale = transform.localScale;
+		firePFX.Stop();
 
+	}
+
+	public void Fireball()
+	{
+		rb.velocity = rb.velocity.normalized * maxSpeed;
+		fireball=true;
+		firePFX.Play();
 	}
 
 	public void SetVelocity(Vector2 vector)
@@ -35,8 +51,19 @@ public class Ball : MonoBehaviour
 
 	public void FixedUpdate()
 	{
-		if (serving) return;
-		if (rb.velocity.magnitude > maxSpeed) rb.velocity = rb.velocity.normalized * maxSpeed;
+		if (serving) {
+			if(firePFX.isPlaying){ 
+				firePFX.Stop();
+				fireball=false;
+				}
+			
+			return;
+		}
+
+		if (fireball==false & rb.velocity.magnitude > maxSpeed ) rb.velocity = rb.velocity.normalized * maxSpeed;
+		if (fireball==true & rb.velocity.magnitude > fireballSpeed ) rb.velocity = rb.velocity.normalized * fireballSpeed;
+		if (rb.velocity.magnitude > maxSpeed ) rb.velocity = rb.velocity.normalized * maxSpeed;
+
 		if (Mathf.Abs(rb.velocity.x) < minSpeed)
 		{
 			if (rb.velocity.x < 0) rb.velocity = new Vector2(-minSpeed, rb.velocity.y);
@@ -60,5 +87,6 @@ public class Ball : MonoBehaviour
 		}
 
 		if (other.gameObject.tag == "Player") lastPlayer = other.gameObject.GetComponentInParent<PaddleController>();
+
 	}
 }

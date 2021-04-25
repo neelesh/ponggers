@@ -18,11 +18,11 @@ public class PaddleController : MonoBehaviour
 
 	public bool isServing = false;
 
-	private Vector3 defaultSize;
-	private Vector3 bigPaddleSize;
-	private Vector3 smallPaddleSize;
+	public Vector3 defaultSize;
+	public Vector3 bigPaddleSize;
+	public Vector3 smallPaddleSize;
 
-	private Vector3 targetScale;
+	public Vector3 targetScale;
 
 	public GameManager gameManager;
 
@@ -152,6 +152,9 @@ public class PaddleController : MonoBehaviour
 
 	public void PrepareServeBall(Ball ball)
 	{
+		if(ball.fireball) ball.fireball = false;
+		if(ball.firePFX.isPlaying) ball.firePFX.Stop();
+
 		isServing = true;
 		ball.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
 		ball.transform.parent = servePosition.transform;
@@ -162,6 +165,7 @@ public class PaddleController : MonoBehaviour
 
 	public void ServeBall(Ball ball)
 	{
+
 		ball.serving = false;
 		ball.gameObject.transform.parent = null;
 		ball.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;

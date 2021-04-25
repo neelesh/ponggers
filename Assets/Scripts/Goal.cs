@@ -17,6 +17,10 @@ public class Goal : MonoBehaviour
 	{
 		if (other.transform.tag == "Ball")
 		{
+			Ball ball = other.gameObject.GetComponent<Ball>();
+			if(ball.fireball) ball.fireball = false;
+			if(ball.firePFX.isPlaying) ball.firePFX.Stop();
+
 			airhorn.Play();
 
 			other.gameObject.SetActive(false);

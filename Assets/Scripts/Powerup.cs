@@ -19,6 +19,8 @@ public class Powerup : MonoBehaviour
 
 	public Color rightColor;
 	public Color leftColor;
+	public Color shrinkColor;
+	public Color growColor;
 
 	public bool canCollideWithPlayer = false;
 	public bool beenHit = false;
@@ -32,6 +34,7 @@ public class Powerup : MonoBehaviour
 	public bool shrink;
 	public bool reset;
 	public bool multiball;
+	public bool fireball;
 
 	public bool wallTilting;
 	public bool topLeftAvantage;
@@ -41,11 +44,12 @@ public class Powerup : MonoBehaviour
 
 	public SpriteRenderer spriteRenderer;
 
-	Ball ball;
+	public Ball ball;
 	public GameObject ballPrefab;
 
 	public Sprite growSymbol;
 	public Sprite shrinkSymbol;
+
 	public Sprite resetSymbol;
 
 	public Sprite topLeftAvantageSprite;
@@ -70,6 +74,29 @@ public class Powerup : MonoBehaviour
 		SetSprite();
 	}
 
+	bool canSizeSwitch=true;
+	IEnumerator SwitchSize()
+	{
+		if(canSizeSwitch==false) yield return new WaitForSeconds(0);;
+
+		canSizeSwitch=false;
+		if(grow)
+		{ 
+			grow = false;
+			shrink = true;
+		}
+		else if (shrink)
+		{
+			grow = true;
+			shrink = false;
+		}
+
+		SetSprite();
+
+		yield return new WaitForSeconds(.33f);
+		canSizeSwitch=true;
+	}
+
 	void SetSprite()
 	{
 		if (grow) spriteRenderer.sprite = growSymbol;
@@ -84,6 +111,8 @@ public class Powerup : MonoBehaviour
 
 		if (topLeftAvantage | bottomLeftAvantage) spriteRenderer.color = leftColor;
 		if (topRightAvantage | bottomRightAvantage) spriteRenderer.color = rightColor;
+		if (shrink) spriteRenderer.color = shrinkColor;
+		if (grow) spriteRenderer.color = growColor;
 	}
 
 	void Update()
@@ -130,6 +159,8 @@ public class Powerup : MonoBehaviour
 
 		// 	SetSprite();
 		// }
+
+		if((grow || shrink) && canSizeSwitch) StartCoroutine(SwitchSize());
 
 		if (topLeftAvantage && topBoundary.leftAdvantage)
 		{
@@ -196,7 +227,7 @@ public class Powerup : MonoBehaviour
 			// The powerup has been hit by the ball
 
 			GameObject pfx = Instantiate(hitParticleEffect, transform.position, transform.rotation);
-			if (wallTilting)
+			if (wallTilting | grow | shrink)
 			{
 				ParticleSystem particleSystem = pfx.GetComponent<ParticleSystem>();
 				particleSystem.startColor = spriteRenderer.color;
@@ -204,8 +235,11 @@ public class Powerup : MonoBehaviour
 
 			beenHit = true;
 
-			if (grow || shrink)
+			if (grow | shrink)
 			{
+				canSizeSwitch = false;
+				StopCoroutine(SwitchSize());
+				
 				canCollideWithPlayer = true;
 				ball = other.gameObject.GetComponent<Ball>();
 				target = ball.lastPlayer.gameObject;
@@ -237,11 +271,17 @@ public class Powerup : MonoBehaviour
 				newBallRb.velocity = -ballRb.velocity;
 				powerUpSpawner.Recycle(gameObject);
 			}
+			else if(fireball)
+			{
+				ball = other.gameObject.GetComponent<Ball>();
+				ball.Fireball();
+				powerUpSpawner.Recycle(gameObject);
+			}
 		}
 
 		else if (other.gameObject.tag == "Player" && beenHit && canCollideWithPlayer)
 		{
-			InstantiateParticleEffectWithoutSound();
+		 InstantiateParticleEffectWithoutSound();
 
 			PaddleController paddle = other.gameObject.GetComponentInParent<PaddleController>();
 
@@ -286,6 +326,19 @@ public class Powerup : MonoBehaviour
 
 	public void ApplyPowerUp(PaddleController paddle)
 	{
+	Vector3 scale = ball.lastPlayer.targetScale;
+
+	if(scale == ball.lastPlayer.bigPaddleSize){
+		grow = false;
+		shrink = true;
+		SetSprite();
+	}
+	else if(scale == ball.lastPlayer.smallPaddleSize){
+		grow = true;
+		shrink = false;
+		SetSprite();
+	}
+
 		if (grow) paddle.Grow();
 		if (shrink) paddle.Shrink();
 	}
@@ -321,6 +374,7 @@ public class Powerup : MonoBehaviour
 		beenHit = false;
 		canCollideWithPlayer = false;
 		rigidBody.velocity = Vector2.zero;
+		canSizeSwitch = true;
 	}
 
 

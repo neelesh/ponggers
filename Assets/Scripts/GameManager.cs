@@ -155,8 +155,16 @@ public class GameManager : MonoBehaviour
 
 	public void DestroyBallClones()
 	{
+		ball.fireball = false;
+		if(ball.firePFX.isPlaying)ball.firePFX.Stop();
+
 		foreach (GameObject go in ballClones)
 		{
+			Ball ballClone = go.GetComponent<Ball>();
+			if(ballClone){
+				ballClone.fireball = false;
+				if(ballClone.firePFX.isPlaying)ball.firePFX.Stop();
+			}
 			Destroy(go);
 		}
 
