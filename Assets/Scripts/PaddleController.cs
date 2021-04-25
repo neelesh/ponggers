@@ -42,6 +42,7 @@ public class PaddleController : MonoBehaviour
 		ballRB = ball.GetComponent<Rigidbody2D>();
 
 		transform.position = (leftPaddle) ? new Vector2(transform.position.x, -2f) : new Vector2(transform.position.x, 2f);
+		
 	}
 
 	void Update()
@@ -57,6 +58,9 @@ public class PaddleController : MonoBehaviour
 			SimulatePlayer();
 			return;
 		}
+
+		if (leftPaddle) movement.y = Input.GetAxisRaw("Vertical");
+		else movement.y = Input.GetAxisRaw("Vertical2");
 	}
 
 	void SetCirclesPosition()
@@ -100,7 +104,7 @@ public class PaddleController : MonoBehaviour
 		}
 
 		// too far to bother
-		if (Mathf.Abs(closestBall.transform.position.x - gameObject.transform.position.x) > 7)
+		if (Mathf.Abs(closestBall.transform.position.x - gameObject.transform.position.x) > 3)
 		{
 			movement.y = 0;
 			return;
@@ -119,8 +123,8 @@ public class PaddleController : MonoBehaviour
 
 		void GoToCenter()
 		{
-			if (topY > center + 2) movement.y = -1;
-			else if (bottomY < center - 2) movement.y = 1;
+			if (topY > center + 4) movement.y = -1;
+			else if (bottomY < center - 4) movement.y = 1;
 			else movement.y = 0;
 		}
 	}
