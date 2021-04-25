@@ -22,10 +22,11 @@ public class Menu : MonoBehaviour
 
 	void Update()
 	{
+		if (canPause == false) return;
+
 		if (Input.GetKeyDown(KeyCode.Escape))
 		{
 			if (pauseMenuGO == null) return;
-			if (canPause == false) return;
 
 			if (!gameIsPaused)
 			{
@@ -48,6 +49,7 @@ public class Menu : MonoBehaviour
 		gameIsPaused = false;
 		pauseMenuGO.SetActive(false);
 		Time.timeScale = timeScaleBeforePause;
+		canPause = true;
 	}
 
 	public void SetCanPause(bool canPause)

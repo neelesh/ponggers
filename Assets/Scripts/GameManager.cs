@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
 	public Scoreboard scoreboard;
 
 	public GameObject replayMenu;
+	public Menu pauseMenu;
 
 	public int targetFrameRate = 60;
 
@@ -65,8 +66,16 @@ public class GameManager : MonoBehaviour
 	public void SetupServe(PaddleController paddle)
 	{
 		ball.lastPlayer = paddle;
-		if (scoreboard.rightScore == 11) StartCoroutine(PlayerWins("BLUE WINS!"));
-		else if (scoreboard.leftScore == 11) StartCoroutine(PlayerWins("RED WINS!"));
+		if (scoreboard.rightScore == 11)
+		{
+			StartCoroutine(PlayerWins("BLUE WINS!"));
+			pauseMenu.canPause = false;
+		}
+		else if (scoreboard.leftScore == 11)
+		{
+			StartCoroutine(PlayerWins("RED WINS!"));
+			pauseMenu.canPause = false;
+		}
 		else
 		{
 			ball.serving = true;
@@ -130,28 +139,28 @@ public class GameManager : MonoBehaviour
 		GameObject closest = ball.gameObject;
 		float distance = 10000;
 
-		foreach(GameObject b in ballClones)
+		foreach (GameObject b in ballClones)
 		{
-			if( Mathf.Abs(b.transform.position.x - go.transform.position.x) < distance)
+			if (Mathf.Abs(b.transform.position.x - go.transform.position.x) < distance)
 			{
 				closest = b;
 				distance = Mathf.Abs(b.transform.position.x - go.transform.position.x);
 			}
 		}
 
-		if(Mathf.Abs(ball.gameObject.transform.position.x - go.transform.position.x) < distance) closest = ball.gameObject;
+		if (Mathf.Abs(ball.gameObject.transform.position.x - go.transform.position.x) < distance) closest = ball.gameObject;
 
 		return closest;
 	}
 
 	public void DestroyBallClones()
 	{
-		foreach(GameObject go in ballClones)
+		foreach (GameObject go in ballClones)
 		{
 			Destroy(go);
 		}
 
-		ballClones.Clear();;
+		ballClones.Clear(); ;
 	}
 
 

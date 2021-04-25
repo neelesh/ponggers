@@ -26,6 +26,9 @@ public class PaddleController : MonoBehaviour
 
 	public GameManager gameManager;
 
+	public GameObject topCircle;
+	public GameObject bottomCircle;
+
 	void Start()
 	{
 		defaultSize = paddleGO.transform.localScale;
@@ -38,11 +41,13 @@ public class PaddleController : MonoBehaviour
 		boxCollider = GetComponentInChildren<BoxCollider2D>();
 		ballRB = ball.GetComponent<Rigidbody2D>();
 
-		transform.position = new Vector2(transform.position.x, Random.Range(-3f, 3f));
+		transform.position = (leftPaddle) ? new Vector2(transform.position.x, -2f) : new Vector2(transform.position.x, 2f);
 	}
 
 	void Update()
 	{
+		SetCirclesPosition();
+
 		if (paddleGO.transform.localScale != targetScale) paddleGO.transform.localScale = Vector3.Lerp(paddleGO.transform.localScale, targetScale, Time.deltaTime * 10);
 
 		if (Time.timeScale == 0) return;
@@ -52,9 +57,18 @@ public class PaddleController : MonoBehaviour
 			SimulatePlayer();
 			return;
 		}
+	}
 
-		if (leftPaddle) movement.y = Input.GetAxisRaw("Vertical");
-		else movement.y = Input.GetAxisRaw("Vertical2");
+	void SetCirclesPosition()
+	{
+		Bounds boxBounds = boxCollider.bounds;
+		GameObject closestBall = gameManager.GetClosestBall(gameObject);
+
+		float topY = boxBounds.size.y / 2;
+		float bottomY = -boxBounds.size.y / 2;
+
+		topCircle.transform.localPosition = new Vector2(0, topY);
+		bottomCircle.transform.localPosition = new Vector2(0, bottomY);
 	}
 
 	private void SimulatePlayer()
@@ -66,31 +80,27 @@ public class PaddleController : MonoBehaviour
 		float topY = boxBounds.center.y + boxBounds.extents.y;
 		float bottomY = boxBounds.center.y - boxBounds.extents.y;
 
+		float center = Camera.main.transform.position.y;
+
 		if (isServing)
 		{
-			if (Camera.main.transform.position.y - 2 > topY) movement.y = 1;
-			else if (Camera.main.transform.position.y + 2 < bottomY) movement.y = -1;
-			return;
+			BeNeutral();
 		}
 
 		// The ball is moving away from us so lets pick a neutral position
-		else if (leftPaddle && ballRB.velocity.x > 0)
+		if (leftPaddle && ballRB.velocity.x > 0)
 		{
-			if (Camera.main.transform.position.y > topY) movement.y = 1;
-			else if (Camera.main.transform.position.y < bottomY) movement.y = -1;
-			else movement.y = 0;
+			GoToCenter();
 			return;
 		}
 		else if (!leftPaddle && ballRB.velocity.x < 0)
 		{
-			if (Camera.main.transform.position.y > topY) movement.y = 1;
-			else if (Camera.main.transform.position.y < bottomY) movement.y = -1;
-			else movement.y = 0;
+			GoToCenter();
 			return;
 		}
 
 		// too far to bother
-		if (Vector2.Distance(closestBall.transform.position, gameObject.transform.position) > 10)
+		if (Mathf.Abs(closestBall.transform.position.x - gameObject.transform.position.x) > 7)
 		{
 			movement.y = 0;
 			return;
@@ -99,6 +109,20 @@ public class PaddleController : MonoBehaviour
 		if (closestBall.transform.position.y > topY) movement.y = 1;
 		else if (closestBall.transform.position.y < bottomY) movement.y = -1;
 		// else movement.y = 0;
+
+		void BeNeutral()
+		{
+			if (bottomY > center + 1) movement.y = -1;
+			else if (topY < center - 1) movement.y = 1;
+			return;
+		}
+
+		void GoToCenter()
+		{
+			if (topY > center + 2) movement.y = -1;
+			else if (bottomY < center - 2) movement.y = 1;
+			else movement.y = 0;
+		}
 	}
 
 	void OnDrawGizmos()
