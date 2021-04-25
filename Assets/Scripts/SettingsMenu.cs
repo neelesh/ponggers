@@ -34,7 +34,12 @@ public class SettingsMenu : MonoBehaviour
 
 		int currentResolutionIndex = 0;
 
-
+		for (int i = resolutions.Count - 1; i > -1; i--)
+		{
+			float width = resolutions[i].width;
+			float height = resolutions[i].height;
+			if (Mathf.Abs((width / height) - (16f / 9f)) > .1) resolutions.RemoveAt(i);
+		}
 
 		// Add Screen Res Options
 		for (int i = 0; i < resolutions.Count; i++)
