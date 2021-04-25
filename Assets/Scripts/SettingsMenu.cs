@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,7 +9,8 @@ public class SettingsMenu : MonoBehaviour
 	// Save save;
 	public GameData gameData;
 
-	Resolution[] resolutions;
+	List<Resolution> resolutions;
+	List<string> resolutionOptions;
 
 	public Slider MusicVolume;
 	public Slider SFXVolume;
@@ -27,12 +29,15 @@ public class SettingsMenu : MonoBehaviour
 	void Start()
 	{
 
-		resolutions = Screen.resolutions;
+		resolutions = Screen.resolutions.Where(resolution => resolution.refreshRate == 60).ToList();
 		List<string> resolutionOptions = new List<string>();
+
 		int currentResolutionIndex = 0;
 
+
+
 		// Add Screen Res Options
-		for (int i = 0; i < resolutions.Length; i++)
+		for (int i = 0; i < resolutions.Count; i++)
 		{
 			int width = resolutions[i].width;
 			int height = resolutions[i].height;
@@ -46,6 +51,16 @@ public class SettingsMenu : MonoBehaviour
 			}
 
 		}
+
+		resolutionDropdown.onValueChanged.AddListener(delegate
+		{
+			SetResolution(resolutionDropdown.value);
+		});
+
+		fullscreenToggle.onValueChanged.AddListener(delegate
+		{
+			SetFullscreen(fullscreenToggle.isOn);
+		});
 
 		resolutionDropdown.AddOptions(resolutionOptions);
 		resolutionDropdown.value = currentResolutionIndex;
