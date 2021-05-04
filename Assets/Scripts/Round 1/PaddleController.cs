@@ -29,8 +29,13 @@ public class PaddleController : MonoBehaviour
 	public GameObject topCircle;
 	public GameObject bottomCircle;
 
+	public Skills skills;
+
 	void Start()
 	{
+		//skill tree
+		skills = new Skills();
+
 		defaultSize = paddleGO.transform.localScale;
 		targetScale = defaultSize;
 
@@ -42,7 +47,7 @@ public class PaddleController : MonoBehaviour
 		ballRB = ball.GetComponent<Rigidbody2D>();
 
 		transform.position = (leftPaddle) ? new Vector2(transform.position.x, -2f) : new Vector2(transform.position.x, 2f);
-		
+
 	}
 
 	void Update()
@@ -152,8 +157,8 @@ public class PaddleController : MonoBehaviour
 
 	public void PrepareServeBall(Ball ball)
 	{
-		if(ball.fireball) ball.fireball = false;
-		if(ball.firePFX.isPlaying) ball.firePFX.Stop();
+		if (ball.fireball) ball.fireball = false;
+		if (ball.firePFX.isPlaying) ball.firePFX.Stop();
 
 		isServing = true;
 		ball.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
@@ -198,4 +203,17 @@ public class PaddleController : MonoBehaviour
 	{
 		targetScale = defaultSize;
 	}
+
+
+
+
+
+
+	// SKILL TREE SKILLSS
+	public bool CanUseSpeed() => skills.IsSkillUnlocked(Skills.SkillType.Speed);
+	public bool CanUseMovement() => skills.IsSkillUnlocked(Skills.SkillType.Movement);
+	public bool CanUseTilting() => skills.IsSkillUnlocked(Skills.SkillType.Tilting);
+	public bool CanUseBall() => skills.IsSkillUnlocked(Skills.SkillType.CurveBall);
+	public bool CanUseMagnetic() => skills.IsSkillUnlocked(Skills.SkillType.Magnetic);
+	public bool CanUsChargeShot() => skills.IsSkillUnlocked(Skills.SkillType.Magnetic);
 }
