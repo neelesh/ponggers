@@ -29,6 +29,8 @@ public class PaddleController : MonoBehaviour
 	public GameObject topCircle;
 	public GameObject bottomCircle;
 
+	public int XP = 10000;
+
 	public Skills skills;
 
 	void Start()
