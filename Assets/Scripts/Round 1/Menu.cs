@@ -24,24 +24,24 @@ public class Menu : MonoBehaviour
 	{
 		if (canPause == false) return;
 
-		if (Input.GetKeyDown(KeyCode.Escape))
-		{
-			if (pauseMenuGO == null) return;
+		// if (Input.GetKeyDown(KeyCode.Escape))
+		// {
+		// 	if (pauseMenuGO == null) return;
 
-			if (!gameIsPaused)
-			{
-				timeScaleBeforePause = Time.timeScale;
-				pauseMenuGO.SetActive(true);
-				Time.timeScale = 0f;
-				gameIsPaused = true;
-			}
-			else
-			{
-				pauseMenuGO.SetActive(false);
-				Time.timeScale = timeScaleBeforePause;
-				gameIsPaused = false;
-			}
-		}
+		// 	if (!gameIsPaused)
+		// 	{
+		// 		timeScaleBeforePause = Time.timeScale;
+		// 		pauseMenuGO.SetActive(true);
+		// 		Time.timeScale = 0f;
+		// 		gameIsPaused = true;
+		// 	}
+		// 	else
+		// 	{
+		// 		pauseMenuGO.SetActive(false);
+		// 		Time.timeScale = timeScaleBeforePause;
+		// 		gameIsPaused = false;
+		// 	}
+		// }
 	}
 
 	public void ResumeGame()

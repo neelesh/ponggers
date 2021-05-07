@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 458152905518839726}
   - component: {fileID: 1984338657337302772}
   - component: {fileID: 1984338657337302731}
+  - component: {fileID: 1435931401678599853}
   m_Layer: 0
   m_Name: PowerUp Particle Hit
   m_TagString: SFX
@@ -4972,3 +4973,16 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &1435931401678599853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1984338657337302730}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4c5a7c10e447d84f8edd24e4bd86d63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  countDownSecs: 5

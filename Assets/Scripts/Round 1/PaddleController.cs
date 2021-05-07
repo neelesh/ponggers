@@ -27,14 +27,30 @@ public class PaddleController : MonoBehaviour
 	public GameManager gameManager;
 
 	public GameObject topCircle;
+	public GameObject topCirclePosition;
 	public GameObject bottomCircle;
+	public GameObject bottomCirclePosition;
 
 	public int XP = 10000;
 
 	public Skills skills;
+	private TDActions controls;
+	private Camera mainCamera;
+
+	private void Awake() => controls = new TDActions();
+	private void OnEnable() => controls.Enable();
+	private void OnDisable() => controls.Disable();
+
+
+	[SerializeField] private Transform bulletDirection;
 
 	void Start()
 	{
+		mainCamera = Camera.main;
+		// New Input System Stuff
+		controls.ActionMap.Primary.performed += _ => Primary();
+		controls.ActionMap.Secondary.performed += _ => Secondary();
+
 		//skill tree
 		skills = new Skills();
 
@@ -54,6 +70,15 @@ public class PaddleController : MonoBehaviour
 
 	void Update()
 	{
+
+		// Rotate to face mouse
+		Vector2 mouseScreenPos = controls.ActionMap.MousePosition.ReadValue<Vector2>();
+		Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
+		Vector3 targetDirection = mouseWorldPos - transform.position;
+		float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
+		transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
+
+
 		SetCirclesPosition();
 
 		if (paddleGO.transform.localScale != targetScale) paddleGO.transform.localScale = Vector3.Lerp(paddleGO.transform.localScale, targetScale, Time.deltaTime * 10);
@@ -65,10 +90,21 @@ public class PaddleController : MonoBehaviour
 			SimulatePlayer();
 			return;
 		}
-
-		if (leftPaddle) movement.y = Input.GetAxisRaw("Vertical");
-		else movement.y = Input.GetAxisRaw("Vertical2");
 	}
+
+	void FixedUpdate()
+	{
+		// rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
+		rb.velocity = movement * speed;
+		if (leftPaddle)
+		{
+			movement.y = controls.ActionMap.Movement.ReadValue<Vector2>().y;
+			movement.x = controls.ActionMap.Movement.ReadValue<Vector2>().x;
+		}
+		else movement.y = controls.ActionMap.Movement.ReadValue<Vector2>().y;
+	}
+
+
 
 	void SetCirclesPosition()
 	{
@@ -78,8 +114,8 @@ public class PaddleController : MonoBehaviour
 		float topY = boxBounds.size.y / 2;
 		float bottomY = -boxBounds.size.y / 2;
 
-		topCircle.transform.localPosition = new Vector2(0, topY);
-		bottomCircle.transform.localPosition = new Vector2(0, bottomY);
+		topCircle.transform.position = topCirclePosition.transform.position;
+		bottomCircle.transform.position = bottomCirclePosition.transform.position;
 	}
 
 	private void SimulatePlayer()
@@ -151,11 +187,6 @@ public class PaddleController : MonoBehaviour
 		Gizmos.DrawLine(new Vector3(transform.position.x, bottomY, 0), new Vector3(0, bottomY, 0));
 	}
 
-	void FixedUpdate()
-	{
-		// rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
-		rb.velocity = movement * speed;
-	}
 
 	public void PrepareServeBall(Ball ball)
 	{
@@ -218,4 +249,15 @@ public class PaddleController : MonoBehaviour
 	public bool CanUseBall() => skills.IsSkillUnlocked(Skills.SkillType.CurveBall);
 	public bool CanUseMagnetic() => skills.IsSkillUnlocked(Skills.SkillType.Magnetic);
 	public bool CanUsChargeShot() => skills.IsSkillUnlocked(Skills.SkillType.Magnetic);
+
+
+	public void Primary()
+	{
+
+	}
+
+	public void Secondary()
+	{
+
+	}
 }
