@@ -5,7 +5,7 @@ using UnityEngine;
 public class PaddleController : MonoBehaviour
 {
 	public GameObject paddleGO;
-	public float speed = 5;
+	public float speed = 6;
 	public Rigidbody2D rb;
 	public BoxCollider2D boxCollider;
 	public GameObject servePosition;
@@ -31,11 +31,11 @@ public class PaddleController : MonoBehaviour
 	public GameObject bottomCircle;
 	public GameObject bottomCirclePosition;
 
-	public int XP = 10000;
-
 	public Skills skills;
 	private TDActions controls;
 	private Camera mainCamera;
+
+	public XP xp;
 
 	private void Awake() => controls = new TDActions();
 	private void OnEnable() => controls.Enable();
@@ -70,15 +70,6 @@ public class PaddleController : MonoBehaviour
 
 	void Update()
 	{
-
-		// Rotate to face mouse
-		Vector2 mouseScreenPos = controls.ActionMap.MousePosition.ReadValue<Vector2>();
-		Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
-		Vector3 targetDirection = mouseWorldPos - transform.position;
-		float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
-		transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
-
-
 		SetCirclesPosition();
 
 		if (paddleGO.transform.localScale != targetScale) paddleGO.transform.localScale = Vector3.Lerp(paddleGO.transform.localScale, targetScale, Time.deltaTime * 10);
@@ -94,14 +85,34 @@ public class PaddleController : MonoBehaviour
 
 	void FixedUpdate()
 	{
+		// Rotate to face mouse
+		if (skills.IsSkillUnlocked(Skills.SkillType.Tilting))
+		{
+			Vector2 mouseScreenPos = controls.ActionMap.MousePosition.ReadValue<Vector2>();
+			Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
+			Vector3 targetDirection = mouseWorldPos - transform.position;
+			float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
+			// if (angle < -30) angle = -30;
+			// else if (angle > 30) angle = 30;
+			transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
+		}
+
+
 		// rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
 		rb.velocity = movement * speed;
 		if (leftPaddle)
 		{
 			movement.y = controls.ActionMap.Movement.ReadValue<Vector2>().y;
-			movement.x = controls.ActionMap.Movement.ReadValue<Vector2>().x;
+			if (skills.IsSkillUnlocked(Skills.SkillType.Movement))
+			{
+				movement.x = controls.ActionMap.Movement.ReadValue<Vector2>().x;
+				if ((rb.constraints & RigidbodyConstraints2D.FreezePositionX) == RigidbodyConstraints2D.FreezePositionX)
+				{
+					rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+				}
+			}
 		}
-		else movement.y = controls.ActionMap.Movement.ReadValue<Vector2>().y;
+		else if (!isAIPlayer) movement.y = controls.ActionMap.Movement.ReadValue<Vector2>().y;
 	}
 
 
@@ -147,7 +158,7 @@ public class PaddleController : MonoBehaviour
 		}
 
 		// too far to bother
-		if (Mathf.Abs(closestBall.transform.position.x - gameObject.transform.position.x) > 3)
+		if (Mathf.Abs(closestBall.transform.position.x - gameObject.transform.position.x) > 4)
 		{
 			movement.y = 0;
 			return;

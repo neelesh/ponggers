@@ -65,23 +65,20 @@ public class Powerup : MonoBehaviour
 	private Vector2 direction;
 
 
-
-
-
 	void Start()
 	{
 		rigidBody = GetComponent<Rigidbody2D>();
 		SetSprite();
 	}
 
-	bool canSizeSwitch=true;
+	bool canSizeSwitch = true;
 	IEnumerator SwitchSize()
 	{
-		if(canSizeSwitch==false) yield return new WaitForSeconds(0);;
+		if (canSizeSwitch == false) yield return new WaitForSeconds(0); ;
 
-		canSizeSwitch=false;
-		if(grow)
-		{ 
+		canSizeSwitch = false;
+		if (grow)
+		{
 			grow = false;
 			shrink = true;
 		}
@@ -94,7 +91,7 @@ public class Powerup : MonoBehaviour
 		SetSprite();
 
 		yield return new WaitForSeconds(.33f);
-		canSizeSwitch=true;
+		canSizeSwitch = true;
 	}
 
 	void SetSprite()
@@ -160,7 +157,7 @@ public class Powerup : MonoBehaviour
 		// 	SetSprite();
 		// }
 
-		if((grow || shrink) && canSizeSwitch) StartCoroutine(SwitchSize());
+		if ((grow || shrink) && canSizeSwitch) StartCoroutine(SwitchSize());
 
 		if (topLeftAvantage && topBoundary.leftAdvantage)
 		{
@@ -225,6 +222,7 @@ public class Powerup : MonoBehaviour
 		else if (other.gameObject.tag == "Ball" && beenHit == false)
 		{
 			// The powerup has been hit by the ball
+			ball.lastPlayer.xp.Add(100);
 
 			GameObject pfx = Instantiate(hitParticleEffect, transform.position, transform.rotation);
 			if (wallTilting | grow | shrink)
@@ -239,7 +237,7 @@ public class Powerup : MonoBehaviour
 			{
 				canSizeSwitch = false;
 				StopCoroutine(SwitchSize());
-				
+
 				canCollideWithPlayer = true;
 				ball = other.gameObject.GetComponent<Ball>();
 				target = ball.lastPlayer.gameObject;
@@ -271,7 +269,7 @@ public class Powerup : MonoBehaviour
 				newBallRb.velocity = -ballRb.velocity;
 				powerUpSpawner.Recycle(gameObject);
 			}
-			else if(fireball)
+			else if (fireball)
 			{
 				ball = other.gameObject.GetComponent<Ball>();
 				ball.Fireball();
@@ -281,7 +279,7 @@ public class Powerup : MonoBehaviour
 
 		else if (other.gameObject.tag == "Player" && beenHit && canCollideWithPlayer)
 		{
-		 InstantiateParticleEffectWithoutSound();
+			InstantiateParticleEffectWithoutSound();
 
 			PaddleController paddle = other.gameObject.GetComponentInParent<PaddleController>();
 
@@ -326,18 +324,20 @@ public class Powerup : MonoBehaviour
 
 	public void ApplyPowerUp(PaddleController paddle)
 	{
-	Vector3 scale = ball.lastPlayer.targetScale;
+		Vector3 scale = ball.lastPlayer.targetScale;
 
-	if(scale == ball.lastPlayer.bigPaddleSize){
-		grow = false;
-		shrink = true;
-		SetSprite();
-	}
-	else if(scale == ball.lastPlayer.smallPaddleSize){
-		grow = true;
-		shrink = false;
-		SetSprite();
-	}
+		if (scale == ball.lastPlayer.bigPaddleSize)
+		{
+			grow = false;
+			shrink = true;
+			SetSprite();
+		}
+		else if (scale == ball.lastPlayer.smallPaddleSize)
+		{
+			grow = true;
+			shrink = false;
+			SetSprite();
+		}
 
 		if (grow) paddle.Grow();
 		if (shrink) paddle.Shrink();

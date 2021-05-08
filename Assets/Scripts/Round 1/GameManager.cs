@@ -24,8 +24,24 @@ public class GameManager : MonoBehaviour
 
 	public int targetFrameRate = 60;
 
+	private PauseAction pauseAction;
+
+	private void OnEnable()
+	{
+		pauseAction.Enable();
+	}
+
+	private void OnDisable()
+	{
+		pauseAction.Disable();
+	}
+
+
+
 	void Awake()
 	{
+		pauseAction = new PauseAction();
+
 		Application.targetFrameRate = targetFrameRate;
 
 		Time.timeScale = 1f;
@@ -42,6 +58,9 @@ public class GameManager : MonoBehaviour
 
 	void Start()
 	{
+		pauseAction.PauseActionMap.Pause.performed += _ => Pause();
+
+
 		if (GameData.Instance.gameMode == GameData.GameMode.SinglePlayer)
 		{
 			leftPaddle.isAIPlayer = false;
@@ -58,6 +77,11 @@ public class GameManager : MonoBehaviour
 			rightPaddle.isAIPlayer = true;
 		}
 		SetupServeLeft();
+	}
+
+	private void Pause()
+	{
+		pauseMenu.TogglePause();
 	}
 
 	public void SetupServeLeft() => SetupServe(leftPaddle);
@@ -156,14 +180,15 @@ public class GameManager : MonoBehaviour
 	public void DestroyBallClones()
 	{
 		ball.fireball = false;
-		if(ball.firePFX.isPlaying)ball.firePFX.Stop();
+		if (ball.firePFX.isPlaying) ball.firePFX.Stop();
 
 		foreach (GameObject go in ballClones)
 		{
 			Ball ballClone = go.GetComponent<Ball>();
-			if(ballClone){
+			if (ballClone)
+			{
 				ballClone.fireball = false;
-				if(ballClone.firePFX.isPlaying)ball.firePFX.Stop();
+				if (ballClone.firePFX.isPlaying) ball.firePFX.Stop();
 			}
 			Destroy(go);
 		}

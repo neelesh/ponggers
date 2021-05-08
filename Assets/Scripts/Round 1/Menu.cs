@@ -19,29 +19,26 @@ public class Menu : MonoBehaviour
 	public void SetTwoPlayer() => GameData.Instance.SetTwoPlayer();
 	public void SetAIvsAI() => GameData.Instance.SetAIvsAI();
 
-
-	void Update()
+	public void TogglePause()
 	{
 		if (canPause == false) return;
 
-		// if (Input.GetKeyDown(KeyCode.Escape))
-		// {
-		// 	if (pauseMenuGO == null) return;
+		if (pauseMenuGO == null) return;
 
-		// 	if (!gameIsPaused)
-		// 	{
-		// 		timeScaleBeforePause = Time.timeScale;
-		// 		pauseMenuGO.SetActive(true);
-		// 		Time.timeScale = 0f;
-		// 		gameIsPaused = true;
-		// 	}
-		// 	else
-		// 	{
-		// 		pauseMenuGO.SetActive(false);
-		// 		Time.timeScale = timeScaleBeforePause;
-		// 		gameIsPaused = false;
-		// 	}
-		// }
+		if (!gameIsPaused)
+		{
+			timeScaleBeforePause = Time.timeScale;
+			pauseMenuGO.SetActive(true);
+			Time.timeScale = 0f;
+			gameIsPaused = true;
+		}
+		else
+		{
+			pauseMenuGO.SetActive(false);
+			Time.timeScale = timeScaleBeforePause;
+			gameIsPaused = false;
+
+		}
 	}
 
 	public void ResumeGame()

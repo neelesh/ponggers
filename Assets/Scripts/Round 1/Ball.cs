@@ -40,7 +40,7 @@ public class Ball : MonoBehaviour
 	public void Fireball()
 	{
 		rb.velocity = rb.velocity.normalized * maxSpeed;
-		fireball=true;
+		fireball = true;
 		firePFX.Play();
 	}
 
@@ -51,18 +51,20 @@ public class Ball : MonoBehaviour
 
 	public void FixedUpdate()
 	{
-		if (serving) {
-			if(firePFX.isPlaying){ 
+		if (serving)
+		{
+			if (firePFX.isPlaying)
+			{
 				firePFX.Stop();
-				fireball=false;
-				}
-			
+				fireball = false;
+			}
+
 			return;
 		}
 
-		if (fireball==false & rb.velocity.magnitude > maxSpeed ) rb.velocity = rb.velocity.normalized * maxSpeed;
-		if (fireball==true & rb.velocity.magnitude > fireballSpeed ) rb.velocity = rb.velocity.normalized * fireballSpeed;
-		if (rb.velocity.magnitude > maxSpeed ) rb.velocity = rb.velocity.normalized * maxSpeed;
+		if (fireball == false & rb.velocity.magnitude > maxSpeed) rb.velocity = rb.velocity.normalized * maxSpeed;
+		if (fireball == true & rb.velocity.magnitude != fireballSpeed) rb.velocity = rb.velocity.normalized * fireballSpeed;
+		if (rb.velocity.magnitude > maxSpeed) rb.velocity = rb.velocity.normalized * maxSpeed;
 
 		if (Mathf.Abs(rb.velocity.x) < minSpeed)
 		{

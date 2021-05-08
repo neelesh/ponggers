@@ -38,7 +38,7 @@ public class SkillButton : MonoBehaviour
 
 	}
 
-	void FixedUpdate()
+	void Update()
 	{
 		if (purchased) return;
 
@@ -57,7 +57,7 @@ public class SkillButton : MonoBehaviour
 		else hasPrerequisite = true;
 
 
-		if (paddleController.XP > cost && hasPrerequisite)
+		if (paddleController.xp.balance > cost && hasPrerequisite)
 		{
 			available = true;
 			button.interactable = true;
@@ -66,10 +66,11 @@ public class SkillButton : MonoBehaviour
 
 	public void Purchase()
 	{
-		// paddleController.XP -= cost;
+		paddleController.xp.Subtract(cost);
 		purchased = true;
 		colorBlock.disabledColor = purchasedColor;
 		button.colors = colorBlock;
 		button.interactable = false;
+		paddleController.skills.UnlockSkill(skillType);
 	}
 }

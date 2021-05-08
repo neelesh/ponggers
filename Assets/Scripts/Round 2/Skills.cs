@@ -11,15 +11,15 @@ public class Skills
 		Tilting,
 		CurveBall,
 		Magnetic,
-		ChargeShot
+		Dash,
+		Barrier,
+		ChargeShot,
+		MiniPaddle,
+		CatchServe
 	}
 
-	private List<SkillType> unlockedSkillTypeList;
-
-	public void PlayerSkills() => unlockedSkillTypeList = new List<SkillType>();
-
+	private List<SkillType> unlockedSkillTypeList = new List<SkillType>();
 
 	public void UnlockSkill(SkillType skillType) => unlockedSkillTypeList.Add(skillType);
-
 	public bool IsSkillUnlocked(SkillType skillType) => unlockedSkillTypeList.Contains(skillType);
 }
