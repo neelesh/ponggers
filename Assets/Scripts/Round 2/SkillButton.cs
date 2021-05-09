@@ -57,7 +57,7 @@ public class SkillButton : MonoBehaviour
 		else hasPrerequisite = true;
 
 
-		if (paddleController.xp.balance > cost && hasPrerequisite)
+		if (paddleController.xp.balance >= cost && hasPrerequisite)
 		{
 			available = true;
 			button.interactable = true;

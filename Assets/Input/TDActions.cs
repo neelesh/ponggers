@@ -49,6 +49,14 @@ public class @TDActions : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Dash"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""4850b6a6-0462-4025-afea-755ed63e3820"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -194,6 +202,17 @@ public class @TDActions : IInputActionCollection, IDisposable
                     ""action"": ""Secondary"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""78844b21-a033-4f8d-b9da-e6d9163e9e8f"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -206,6 +225,7 @@ public class @TDActions : IInputActionCollection, IDisposable
         m_ActionMap_Secondary = m_ActionMap.FindAction("Secondary", throwIfNotFound: true);
         m_ActionMap_MousePosition = m_ActionMap.FindAction("MousePosition", throwIfNotFound: true);
         m_ActionMap_Movement = m_ActionMap.FindAction("Movement", throwIfNotFound: true);
+        m_ActionMap_Dash = m_ActionMap.FindAction("Dash", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -259,6 +279,7 @@ public class @TDActions : IInputActionCollection, IDisposable
     private readonly InputAction m_ActionMap_Secondary;
     private readonly InputAction m_ActionMap_MousePosition;
     private readonly InputAction m_ActionMap_Movement;
+    private readonly InputAction m_ActionMap_Dash;
     public struct ActionMapActions
     {
         private @TDActions m_Wrapper;
@@ -267,6 +288,7 @@ public class @TDActions : IInputActionCollection, IDisposable
         public InputAction @Secondary => m_Wrapper.m_ActionMap_Secondary;
         public InputAction @MousePosition => m_Wrapper.m_ActionMap_MousePosition;
         public InputAction @Movement => m_Wrapper.m_ActionMap_Movement;
+        public InputAction @Dash => m_Wrapper.m_ActionMap_Dash;
         public InputActionMap Get() { return m_Wrapper.m_ActionMap; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -288,6 +310,9 @@ public class @TDActions : IInputActionCollection, IDisposable
                 @Movement.started -= m_Wrapper.m_ActionMapActionsCallbackInterface.OnMovement;
                 @Movement.performed -= m_Wrapper.m_ActionMapActionsCallbackInterface.OnMovement;
                 @Movement.canceled -= m_Wrapper.m_ActionMapActionsCallbackInterface.OnMovement;
+                @Dash.started -= m_Wrapper.m_ActionMapActionsCallbackInterface.OnDash;
+                @Dash.performed -= m_Wrapper.m_ActionMapActionsCallbackInterface.OnDash;
+                @Dash.canceled -= m_Wrapper.m_ActionMapActionsCallbackInterface.OnDash;
             }
             m_Wrapper.m_ActionMapActionsCallbackInterface = instance;
             if (instance != null)
@@ -304,6 +329,9 @@ public class @TDActions : IInputActionCollection, IDisposable
                 @Movement.started += instance.OnMovement;
                 @Movement.performed += instance.OnMovement;
                 @Movement.canceled += instance.OnMovement;
+                @Dash.started += instance.OnDash;
+                @Dash.performed += instance.OnDash;
+                @Dash.canceled += instance.OnDash;
             }
         }
     }
@@ -314,5 +342,6 @@ public class @TDActions : IInputActionCollection, IDisposable
         void OnSecondary(InputAction.CallbackContext context);
         void OnMousePosition(InputAction.CallbackContext context);
         void OnMovement(InputAction.CallbackContext context);
+        void OnDash(InputAction.CallbackContext context);
     }
 }

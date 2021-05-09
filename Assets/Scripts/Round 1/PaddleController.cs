@@ -6,6 +6,8 @@ public class PaddleController : MonoBehaviour
 {
 	public GameObject paddleGO;
 	public float speed = 6;
+	public float maxSpeed = 9;
+	public float dashSpeed = 50;
 	public Rigidbody2D rb;
 	public BoxCollider2D boxCollider;
 	public GameObject servePosition;
@@ -31,7 +33,11 @@ public class PaddleController : MonoBehaviour
 	public GameObject bottomCircle;
 	public GameObject bottomCirclePosition;
 
+
+	public PointEffector2D magnet;
+
 	public Skills skills;
+
 	private TDActions controls;
 	private Camera mainCamera;
 
@@ -50,6 +56,9 @@ public class PaddleController : MonoBehaviour
 		// New Input System Stuff
 		controls.ActionMap.Primary.performed += _ => Primary();
 		controls.ActionMap.Secondary.performed += _ => Secondary();
+		controls.ActionMap.Dash.performed += _ => TryDash();
+
+		magnet.enabled = false;
 
 		//skill tree
 		skills = new Skills();
@@ -57,7 +66,7 @@ public class PaddleController : MonoBehaviour
 		defaultSize = paddleGO.transform.localScale;
 		targetScale = defaultSize;
 
-		bigPaddleSize = new Vector3(defaultSize.x, defaultSize.y * 2f, defaultSize.z); ;
+		bigPaddleSize = new Vector3(defaultSize.x, defaultSize.y * 1.5f, defaultSize.z); ;
 		smallPaddleSize = new Vector3(defaultSize.x, defaultSize.y / 1.5f, defaultSize.z);
 
 		rb = GetComponent<Rigidbody2D>();
@@ -81,10 +90,7 @@ public class PaddleController : MonoBehaviour
 			SimulatePlayer();
 			return;
 		}
-	}
 
-	void FixedUpdate()
-	{
 		// Rotate to face mouse
 		if (skills.IsSkillUnlocked(Skills.SkillType.Tilting))
 		{
@@ -92,11 +98,17 @@ public class PaddleController : MonoBehaviour
 			Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
 			Vector3 targetDirection = mouseWorldPos - transform.position;
 			float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
-			// if (angle < -30) angle = -30;
-			// else if (angle > 30) angle = 30;
-			transform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle));
+			if (angle < -30) angle = -30;
+			else if (angle > 30) angle = 30;
+			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0f, 0f, angle)), Time.time * 1);
 		}
+	}
 
+	void FixedUpdate()
+	{
+		if (skills.IsSkillUnlocked(Skills.SkillType.Speed) && speed < maxSpeed) speed = maxSpeed;
+
+		if (skills.IsSkillUnlocked(Skills.SkillType.Magnetic) && magnet.enabled == false) magnet.enabled = true;
 
 		// rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
 		rb.velocity = movement * speed;
@@ -205,7 +217,7 @@ public class PaddleController : MonoBehaviour
 		if (ball.firePFX.isPlaying) ball.firePFX.Stop();
 
 		isServing = true;
-		ball.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+		ball.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic; // it's 3am i dunno 
 		ball.transform.parent = servePosition.transform;
 		ball.transform.position = servePosition.transform.position;
 		ball.SetVelocity(Vector2.zero);
@@ -270,5 +282,27 @@ public class PaddleController : MonoBehaviour
 	public void Secondary()
 	{
 
+	}
+
+
+
+	private bool canDash = true;
+	public void TryDash()
+	{
+		if (skills.IsSkillUnlocked(Skills.SkillType.Dash) == false | canDash == false) return;
+
+		StartCoroutine(Dash());
+	}
+
+	IEnumerator Dash()
+	{
+		canDash = false;
+		float temp = speed;
+		speed = dashSpeed;
+
+		yield return new WaitForSeconds(.1f);
+		speed = temp;
+
+		canDash = true;
 	}
 }
