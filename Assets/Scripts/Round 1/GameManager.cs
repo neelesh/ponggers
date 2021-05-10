@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
 	public Ball ball;
+
 	public List<GameObject> ballClones;
 
 	public PaddleController leftPaddle;
@@ -90,6 +91,7 @@ public class GameManager : MonoBehaviour
 	public void SetupServe(PaddleController paddle)
 	{
 		ball.lastPlayer = paddle;
+		// ball.trailRenderer.emitting = false;
 		if (scoreboard.rightScore == 11)
 		{
 			StartCoroutine(PlayerWins("BLUE WINS!"));
@@ -151,10 +153,12 @@ public class GameManager : MonoBehaviour
 		countDown.text = "";
 
 		paddle.ServeBall(ball);
+		// ball.trailRenderer.emitting = true;
 	}
 
 	public void AddBallClone(GameObject ball)
 	{
+		ball.GetComponentInChildren<TrailRenderer>().emitting = true;
 		ballClones.Add(ball);
 	}
 

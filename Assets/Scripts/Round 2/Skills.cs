@@ -18,8 +18,14 @@ public class Skills
 		CatchServe
 	}
 
+	public PaddleController paddleController;
+
 	private List<SkillType> unlockedSkillTypeList = new List<SkillType>();
 
-	public void UnlockSkill(SkillType skillType) => unlockedSkillTypeList.Add(skillType);
+	public void UnlockSkill(SkillType skillType)
+	{
+		unlockedSkillTypeList.Add(skillType);
+		paddleController.ActivateSkill(skillType);
+	}
 	public bool IsSkillUnlocked(SkillType skillType) => unlockedSkillTypeList.Contains(skillType);
 }

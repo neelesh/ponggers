@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,7 +35,7 @@ public class PaddleController : MonoBehaviour
 	public GameObject bottomCirclePosition;
 
 
-	public PointEffector2D magnet;
+	public GameObject magnet;
 
 	public Skills skills;
 
@@ -50,6 +51,28 @@ public class PaddleController : MonoBehaviour
 
 	[SerializeField] private Transform bulletDirection;
 
+
+	public void ActivateSkill(Skills.SkillType skill)
+	{
+		Debug.Log("ActivateSkill( is working");
+		switch (skill)
+		{
+			case Skills.SkillType.Movement:
+				break;
+			case Skills.SkillType.Speed:
+				break;
+			case Skills.SkillType.Tilting:
+				break;
+			case Skills.SkillType.Dash:
+				break;
+			case Skills.SkillType.Magnetic:
+				break;
+			default:
+				break;
+		}
+	}
+
+
 	void Start()
 	{
 		mainCamera = Camera.main;
@@ -58,10 +81,12 @@ public class PaddleController : MonoBehaviour
 		controls.ActionMap.Secondary.performed += _ => Secondary();
 		controls.ActionMap.Dash.performed += _ => TryDash();
 
-		magnet.enabled = false;
+		magnet.SetActive(false);
 
 		//skill tree
 		skills = new Skills();
+
+		skills.paddleController = this;
 
 		defaultSize = paddleGO.transform.localScale;
 		targetScale = defaultSize;
@@ -108,7 +133,7 @@ public class PaddleController : MonoBehaviour
 	{
 		if (skills.IsSkillUnlocked(Skills.SkillType.Speed) && speed < maxSpeed) speed = maxSpeed;
 
-		if (skills.IsSkillUnlocked(Skills.SkillType.Magnetic) && magnet.enabled == false) magnet.enabled = true;
+		if (skills.IsSkillUnlocked(Skills.SkillType.Magnetic) && magnet.activeInHierarchy == false) magnet.SetActive(true);
 
 		// rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
 		rb.velocity = movement * speed;

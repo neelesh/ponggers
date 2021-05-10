@@ -12,23 +12,18 @@ public class Ball : MonoBehaviour
 	public float minSpeed = 2;
 	public float fireballSpeed = 18;
 
-
 	public bool fireball = false;
-
-
 
 	private Vector2 minSpeedVector;
 	public bool serving = true;
-
 	private Vector3 scale;
-
 	public PaddleController lastPlayer;
-
-
 	public ParticleSystem firePFX;
+	public TrailRenderer trailRenderer;
 
 	void Awake()
 	{
+
 		rb = GetComponent<Rigidbody2D>();
 		// rb.velocity = new Vector2(initialSpeed, initialSpeed);
 

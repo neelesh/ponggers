@@ -4820,7 +4820,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2184820669083205739
 Transform:
   m_ObjectHideFlags: 0
@@ -4876,7 +4876,7 @@ TrailRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Time: 5
+  m_Time: 3
   m_Parameters:
     serializedVersion: 3
     widthMultiplier: 1
@@ -4885,21 +4885,21 @@ TrailRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.13432693
-        inSlope: 0
-        outSlope: 0
+        value: 0.2240715
+        inSlope: -0.44472206
+        outSlope: -0.44472206
         tangentMode: 0
         weightedMode: 0
         inWeight: 0.33333334
-        outWeight: 0.33333334
+        outWeight: 1
       - serializedVersion: 3
-        time: 0.11000371
+        time: 0.5000076
         value: 0
-        inSlope: 0
-        outSlope: 0
+        inSlope: -0.4834638
+        outSlope: -0.4834638
         tangentMode: 0
         weightedMode: 0
-        inWeight: 0
+        inWeight: 1
         outWeight: 0
       m_PreInfinity: 2
       m_PostInfinity: 2
@@ -4924,7 +4924,7 @@ TrailRenderer:
       ctime7: 0
       atime0: 0
       atime1: 10409
-      atime2: 0
+      atime2: 10409
       atime3: 0
       atime4: 0
       atime5: 0
@@ -4940,7 +4940,7 @@ TrailRenderer:
     shadowBias: 0.5
     generateLightingData: 0
   m_MinVertexDistance: 0.1
-  m_Autodestruct: 0
+  m_Autodestruct: 1
   m_Emitting: 1
 --- !u!1 &2184820669930621919
 GameObject:
@@ -4969,7 +4969,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2184820669930621919}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.538, y: 1.144, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 1}
   m_Children:
@@ -5001,6 +5001,7 @@ MonoBehaviour:
   serving: 1
   lastPlayer: {fileID: 0}
   firePFX: {fileID: 8360196254217172646}
+  trailRenderer: {fileID: 2184820669083205740}
 --- !u!212 &2184820669930621904
 SpriteRenderer:
   m_ObjectHideFlags: 0
