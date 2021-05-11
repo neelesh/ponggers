@@ -9,7 +9,7 @@ public class Ball : MonoBehaviour
 	Rigidbody2D rb;
 	public float initialSpeed = 5;
 	public float maxSpeed = 20;
-	public float minSpeed = 2;
+	public float minSpeed = 0f;
 	public float fireballSpeed = 18;
 
 	public bool fireball = false;
@@ -48,6 +48,7 @@ public class Ball : MonoBehaviour
 	{
 		if (serving)
 		{
+			if (trailRenderer && trailRenderer.emitting) trailRenderer.emitting = false;
 			if (firePFX.isPlaying)
 			{
 				firePFX.Stop();
@@ -57,17 +58,20 @@ public class Ball : MonoBehaviour
 			return;
 		}
 
+		if (trailRenderer.emitting == false) trailRenderer.emitting = true;
+
 		if (fireball == false & rb.velocity.magnitude > maxSpeed) rb.velocity = rb.velocity.normalized * maxSpeed;
 		if (fireball == true & rb.velocity.magnitude != fireballSpeed) rb.velocity = rb.velocity.normalized * fireballSpeed;
 		if (rb.velocity.magnitude > maxSpeed) rb.velocity = rb.velocity.normalized * maxSpeed;
 
-		if (Mathf.Abs(rb.velocity.x) < minSpeed)
+
+		if (Mathf.Abs(rb.velocity.x) < minSpeed && rb.gravityScale == 0)
 		{
 			if (rb.velocity.x < 0) rb.velocity = new Vector2(-minSpeed, rb.velocity.y);
 			else rb.velocity = new Vector2(minSpeed, rb.velocity.y);
 		}
 
-		if (Mathf.Abs(rb.velocity.y) < minSpeed)
+		if (Mathf.Abs(rb.velocity.y) < minSpeed && rb.gravityScale == 0)
 		{
 			if (rb.velocity.y < 0) rb.velocity = new Vector2(rb.velocity.x, -minSpeed);
 			else rb.velocity = new Vector2(rb.velocity.x, minSpeed);
@@ -82,8 +86,20 @@ public class Ball : MonoBehaviour
 			AudioSource sound = fx.GetComponent<AudioSource>();
 			if (sound) sound.pitch += rb.velocity.magnitude / maxSpeed;
 		}
+		else if (serving == false) serving = true;
 
-		if (other.gameObject.tag == "Player") lastPlayer = other.gameObject.GetComponentInParent<PaddleController>();
+		if (other.gameObject.tag == "Player")
+		{
+			lastPlayer = other.gameObject.GetComponentInParent<PaddleController>();
+			if (lastPlayer.curveBall)
+			{
+				rb.gravityScale = (rb.velocity.y > 0) ? -.5f : .5f;
+			}
+			else
+			{
+				rb.gravityScale = 0;
+			}
+		}
 
 	}
 }

@@ -18,6 +18,9 @@ public class Goal : MonoBehaviour
 		if (other.transform.tag == "Ball")
 		{
 			Ball ball = other.gameObject.GetComponent<Ball>();
+
+			ball.lastPlayer.xp.Add(200);
+
 			if (ball.fireball) ball.fireball = false;
 			if (ball.firePFX.isPlaying) ball.firePFX.Stop();
 

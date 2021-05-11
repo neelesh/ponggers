@@ -21,6 +21,8 @@ public class PaddleController : MonoBehaviour
 
 	public bool isServing = false;
 
+
+
 	public Vector3 defaultSize;
 	public Vector3 bigPaddleSize;
 	public Vector3 smallPaddleSize;
@@ -48,9 +50,14 @@ public class PaddleController : MonoBehaviour
 	private void OnEnable() => controls.Enable();
 	private void OnDisable() => controls.Disable();
 
+	public bool curveBall = false;
+	private bool sidewaysMovement = false;
+	private bool dashUnlocked = false;
+	private bool canTilt = false;
 
 	[SerializeField] private Transform bulletDirection;
 
+	private float startX;
 
 	public void ActivateSkill(Skills.SkillType skill)
 	{
@@ -58,15 +65,24 @@ public class PaddleController : MonoBehaviour
 		switch (skill)
 		{
 			case Skills.SkillType.Movement:
+				sidewaysMovement = true;
 				break;
 			case Skills.SkillType.Speed:
+				speed = maxSpeed;
 				break;
 			case Skills.SkillType.Tilting:
+				canTilt = true;
 				break;
 			case Skills.SkillType.Dash:
+				dashUnlocked = true;
 				break;
 			case Skills.SkillType.Magnetic:
+				magnet.SetActive(true);
 				break;
+			case Skills.SkillType.CurveBall:
+				curveBall = true;
+				break;
+
 			default:
 				break;
 		}
@@ -75,6 +91,8 @@ public class PaddleController : MonoBehaviour
 
 	void Start()
 	{
+		startX = transform.position.x;
+
 		mainCamera = Camera.main;
 		// New Input System Stuff
 		controls.ActionMap.Primary.performed += _ => Primary();
@@ -117,7 +135,7 @@ public class PaddleController : MonoBehaviour
 		}
 
 		// Rotate to face mouse
-		if (skills.IsSkillUnlocked(Skills.SkillType.Tilting))
+		if (canTilt && !isAIPlayer)
 		{
 			Vector2 mouseScreenPos = controls.ActionMap.MousePosition.ReadValue<Vector2>();
 			Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
@@ -131,16 +149,12 @@ public class PaddleController : MonoBehaviour
 
 	void FixedUpdate()
 	{
-		if (skills.IsSkillUnlocked(Skills.SkillType.Speed) && speed < maxSpeed) speed = maxSpeed;
-
-		if (skills.IsSkillUnlocked(Skills.SkillType.Magnetic) && magnet.activeInHierarchy == false) magnet.SetActive(true);
-
-		// rb.MovePosition(rb.position + movement * speed * Time.deltaTime);
 		rb.velocity = movement * speed;
-		if (leftPaddle)
+
+		if (!isAIPlayer)
 		{
 			movement.y = controls.ActionMap.Movement.ReadValue<Vector2>().y;
-			if (skills.IsSkillUnlocked(Skills.SkillType.Movement))
+			if (sidewaysMovement)
 			{
 				movement.x = controls.ActionMap.Movement.ReadValue<Vector2>().x;
 				if ((rb.constraints & RigidbodyConstraints2D.FreezePositionX) == RigidbodyConstraints2D.FreezePositionX)
@@ -149,7 +163,6 @@ public class PaddleController : MonoBehaviour
 				}
 			}
 		}
-		else if (!isAIPlayer) movement.y = controls.ActionMap.Movement.ReadValue<Vector2>().y;
 	}
 
 
@@ -172,6 +185,21 @@ public class PaddleController : MonoBehaviour
 		GameObject closestBall = gameManager.GetClosestBall(gameObject);
 		ballRB = closestBall.GetComponent<Rigidbody2D>();
 
+
+		if (canTilt)
+		{
+			Vector3 targetDirection = closestBall.transform.position - transform.position;
+
+			targetDirection = Quaternion.Inverse(Quaternion.Euler(targetDirection)).eulerAngles;
+			float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
+			if (angle < -30) angle = -30;
+			else if (angle > 30) angle = 30;
+			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0f, 0f, angle)), Time.time * 1);
+		}
+
+
+
+
 		float topY = boxBounds.center.y + boxBounds.extents.y;
 		float bottomY = boxBounds.center.y - boxBounds.extents.y;
 
@@ -180,35 +208,71 @@ public class PaddleController : MonoBehaviour
 		if (isServing)
 		{
 			BeNeutral();
+			return;
 		}
 
 		// The ball is moving away from us so lets pick a neutral position
-		if (leftPaddle && ballRB.velocity.x > 0)
+		if (leftPaddle && ballRB.velocity.x > 0 && Mathf.Abs(closestBall.transform.position.x - gameObject.transform.position.x) > .4f)
 		{
 			GoToCenter();
 			return;
 		}
-		else if (!leftPaddle && ballRB.velocity.x < 0)
+		else if (!leftPaddle && ballRB.velocity.x < 0 && Mathf.Abs(closestBall.transform.position.x - gameObject.transform.position.x) > .4f)
 		{
 			GoToCenter();
 			return;
 		}
+
 
 		// too far to bother
-		if (Mathf.Abs(closestBall.transform.position.x - gameObject.transform.position.x) > 4)
+		if (Mathf.Abs(closestBall.transform.position.x - gameObject.transform.position.x) > 3.5)
 		{
 			movement.y = 0;
+			movement.x = 0;
 			return;
 		}
 
+
+		//Match y position
 		if (closestBall.transform.position.y > topY) movement.y = 1;
 		else if (closestBall.transform.position.y < bottomY) movement.y = -1;
-		// else movement.y = 0;
+
+
+		if (sidewaysMovement)
+		{
+			// this is for the right paddle
+			if (closestBall.transform.position.x > gameObject.transform.position.x) movement.x = 1;
+			else if (closestBall.transform.position.x < gameObject.transform.position.x
+				&& Mathf.Abs(closestBall.transform.position.x - gameObject.transform.position.x) < 2.5
+				&& ballRB.position.y > bottomY && ballRB.position.y < topY
+				)
+				movement.x = -1;
+			else movement.x = 0;
+
+			// now the left one lol
+		}
+
+
 
 		void BeNeutral()
 		{
+			movement.x = 0;
 			if (bottomY > center + 1) movement.y = -1;
 			else if (topY < center - 1) movement.y = 1;
+
+			// Get close to og x position
+			if (
+				sidewaysMovement &&
+				Mathf.Abs(transform.position.x - startX) > .5f)
+			{
+				if (transform.position.x < startX) movement.x = 1;
+				else movement.x = -1;
+			}
+			else
+			{
+				movement.x = 0;
+			}
+
 			return;
 		}
 
@@ -217,7 +281,21 @@ public class PaddleController : MonoBehaviour
 			if (topY > center + 4) movement.y = -1;
 			else if (bottomY < center - 4) movement.y = 1;
 			else movement.y = 0;
+
+			// Get close to og x position
+			if (
+				sidewaysMovement &&
+				Mathf.Abs(transform.position.x - startX) > .5f)
+			{
+				if (transform.position.x < startX) movement.x = 1;
+				else movement.x = -1;
+			}
+			else
+			{
+				movement.x = 0;
+			}
 		}
+
 	}
 
 	void OnDrawGizmos()
@@ -238,19 +316,24 @@ public class PaddleController : MonoBehaviour
 
 	public void PrepareServeBall(Ball ball)
 	{
+		ball.trailRenderer.emitting = false;
+
 		if (ball.fireball) ball.fireball = false;
 		if (ball.firePFX.isPlaying) ball.firePFX.Stop();
 
 		isServing = true;
 		ball.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic; // it's 3am i dunno 
-		ball.transform.parent = servePosition.transform;
-		ball.transform.position = servePosition.transform.position;
+
 		ball.SetVelocity(Vector2.zero);
+		ball.transform.parent = servePosition.transform;
+		ball.transform.localPosition = Vector3.zero;
+		ball.GetComponent<CircleCollider2D>().enabled = false;
 		ball.gameObject.SetActive(true);
 	}
 
 	public void ServeBall(Ball ball)
 	{
+		ball.GetComponent<CircleCollider2D>().enabled = true;
 
 		ball.serving = false;
 		ball.gameObject.transform.parent = null;
@@ -312,9 +395,10 @@ public class PaddleController : MonoBehaviour
 
 
 	private bool canDash = true;
+
 	public void TryDash()
 	{
-		if (skills.IsSkillUnlocked(Skills.SkillType.Dash) == false | canDash == false) return;
+		if (!dashUnlocked && canDash == false) return;
 
 		StartCoroutine(Dash());
 	}

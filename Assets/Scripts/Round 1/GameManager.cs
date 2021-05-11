@@ -91,6 +91,8 @@ public class GameManager : MonoBehaviour
 	public void SetupServe(PaddleController paddle)
 	{
 		ball.lastPlayer = paddle;
+		if (paddle.curveBall == false) ball.GetComponent<Rigidbody2D>().gravityScale = 0;
+
 		// ball.trailRenderer.emitting = false;
 		if (scoreboard.rightScore == 11)
 		{

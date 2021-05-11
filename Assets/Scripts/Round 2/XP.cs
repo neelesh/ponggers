@@ -25,5 +25,6 @@ public class XP : MonoBehaviour
 	{
 		balanceDisplay.text = balance.ToString();
 		skillTreeBalanceDisplay.text = balance.ToString();
+		balanceDisplay.gameObject.GetComponent<Animator>().SetTrigger("GrowShrink");
 	}
 }

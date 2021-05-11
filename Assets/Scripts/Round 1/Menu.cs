@@ -12,6 +12,9 @@ public class Menu : MonoBehaviour
 
 	private float timeScaleBeforePause = 1;
 
+	public GameObject LeftSkillTree;
+	public GameObject RightSkillTree;
+
 	public void Reload() => SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 	public void LoadScene(string sceneName) => SceneManager.LoadScene(sceneName);
 	public void LoadGameplay() => SceneManager.LoadScene("Gameplay");
@@ -31,6 +34,9 @@ public class Menu : MonoBehaviour
 			pauseMenuGO.SetActive(true);
 			Time.timeScale = 0f;
 			gameIsPaused = true;
+
+			LeftSkillTree.gameObject.transform.localScale = Vector3.one;
+			RightSkillTree.gameObject.transform.localScale = Vector3.one;
 		}
 		else
 		{
@@ -38,11 +44,16 @@ public class Menu : MonoBehaviour
 			Time.timeScale = timeScaleBeforePause;
 			gameIsPaused = false;
 
+			LeftSkillTree.gameObject.transform.localScale = Vector3.zero;
+			RightSkillTree.gameObject.transform.localScale = Vector3.zero;
 		}
 	}
 
 	public void ResumeGame()
 	{
+		LeftSkillTree.gameObject.transform.localScale = Vector3.zero;
+		RightSkillTree.gameObject.transform.localScale = Vector3.zero;
+
 		gameIsPaused = false;
 		pauseMenuGO.SetActive(false);
 		Time.timeScale = timeScaleBeforePause;
