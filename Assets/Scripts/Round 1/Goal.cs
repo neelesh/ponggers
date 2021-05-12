@@ -13,13 +13,24 @@ public class Goal : MonoBehaviour
 
 	public AudioSource airhorn;
 
+	public PaddleController left;
+	public PaddleController right;
+
+
 	private void OnTriggerEnter2D(Collider2D other)
 	{
 		if (other.transform.tag == "Ball")
 		{
 			Ball ball = other.gameObject.GetComponent<Ball>();
 
-			ball.lastPlayer.xp.Add(200);
+			if (leftGoal)
+			{
+				right.xp.Add(50);
+			}
+			else
+			{
+				left.xp.Add(50);
+			}
 
 			if (ball.fireball) ball.fireball = false;
 			if (ball.firePFX.isPlaying) ball.firePFX.Stop();

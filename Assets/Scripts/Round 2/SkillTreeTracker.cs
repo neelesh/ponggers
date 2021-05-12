@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class SkillTreeTracker : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class SkillTreeTracker : MonoBehaviour
 	public List<SkillButton> skillButtons;
 	public List<SkillButton> activeButtons;
 	public List<SkillButton> lastActiveButtons;
+
+	public TextMeshProUGUI notification;
 
 	private bool justChecked = false;
 
@@ -37,7 +40,7 @@ public class SkillTreeTracker : MonoBehaviour
 			{
 				// we have new unlocked buttons!
 				// Announce it
-				Debug.Log("Skill Unlocked");
+				StartCoroutine(Notification("Skills Available"));
 				break;
 			}
 		}
@@ -58,5 +61,12 @@ public class SkillTreeTracker : MonoBehaviour
 		yield return new WaitForSeconds(3f);
 		SkillButton skillToBuy = activeButtons[UnityEngine.Random.Range(0, activeButtons.Count - 1)];
 		if (skillToBuy) skillToBuy.gameObject.GetComponent<Button>().onClick.Invoke();
+	}
+
+	IEnumerator Notification(string message)
+	{
+		notification.text = message;
+		yield return new WaitForSeconds(5f);
+		notification.text = "";
 	}
 }

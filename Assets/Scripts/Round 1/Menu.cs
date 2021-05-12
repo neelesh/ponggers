@@ -22,6 +22,11 @@ public class Menu : MonoBehaviour
 	public void SetTwoPlayer() => GameData.Instance.SetTwoPlayer();
 	public void SetAIvsAI() => GameData.Instance.SetAIvsAI();
 
+	private void Awake()
+	{
+		Time.timeScale = 1;
+	}
+
 	public void TogglePause()
 	{
 		if (canPause == false) return;

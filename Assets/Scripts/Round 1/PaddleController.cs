@@ -46,6 +46,9 @@ public class PaddleController : MonoBehaviour
 
 	public XP xp;
 
+	public Vector2 mouseScreenPos;
+	public Vector3 mouseWorldPos;
+
 	private void Awake() => controls = new TDActions();
 	private void OnEnable() => controls.Enable();
 	private void OnDisable() => controls.Disable();
@@ -65,6 +68,10 @@ public class PaddleController : MonoBehaviour
 		{
 			case Skills.SkillType.Movement:
 				sidewaysMovement = true;
+				if ((rb.constraints & RigidbodyConstraints2D.FreezePositionX) == RigidbodyConstraints2D.FreezePositionX)
+				{
+					rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+				}
 				break;
 			case Skills.SkillType.Speed:
 				speed = maxSpeed;
@@ -122,6 +129,9 @@ public class PaddleController : MonoBehaviour
 
 	void Update()
 	{
+		mouseScreenPos = controls.ActionMap.MousePosition.ReadValue<Vector2>();
+		mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
+
 		SetCirclesPosition();
 
 		if (paddleGO.transform.localScale != targetScale) paddleGO.transform.localScale = Vector3.Lerp(paddleGO.transform.localScale, targetScale, Time.deltaTime * 10);
@@ -137,8 +147,6 @@ public class PaddleController : MonoBehaviour
 		// Rotate to face mouse
 		if (canTilt && !isAIPlayer)
 		{
-			Vector2 mouseScreenPos = controls.ActionMap.MousePosition.ReadValue<Vector2>();
-			Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
 			Vector3 targetDirection = mouseWorldPos - transform.position;
 			float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
 			// if (angle < -45) angle = -45;
@@ -157,10 +165,6 @@ public class PaddleController : MonoBehaviour
 			if (sidewaysMovement)
 			{
 				movement.x = controls.ActionMap.Movement.ReadValue<Vector2>().x;
-				if ((rb.constraints & RigidbodyConstraints2D.FreezePositionX) == RigidbodyConstraints2D.FreezePositionX)
-				{
-					rb.constraints = RigidbodyConstraints2D.FreezeRotation;
-				}
 			}
 		}
 	}
@@ -234,7 +238,7 @@ public class PaddleController : MonoBehaviour
 
 
 		// too far to bother
-		if (Mathf.Abs(closestBall.transform.position.x - gameObject.transform.position.x) > 3.5)
+		if (Mathf.Abs(closestBall.transform.position.x - gameObject.transform.position.x) > 4)
 		{
 			movement.y = 0;
 			movement.x = 0;
@@ -348,11 +352,20 @@ public class PaddleController : MonoBehaviour
 		ball.gameObject.transform.parent = null;
 		ball.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Dynamic;
 
-		float yVelocity = -speed * .5f;
-		if (rb.velocity.y != 0) yVelocity = rb.velocity.y * .5f;
+		if (isAIPlayer)
+		{
+			float yVelocity = -speed * .5f;
+			if (rb.velocity.y != 0) yVelocity = rb.velocity.y * .5f;
 
-		if (leftPaddle) ball.SetVelocity(new Vector2(ball.initialSpeed, yVelocity));
-		else ball.SetVelocity(new Vector2(-ball.initialSpeed, yVelocity));
+			if (leftPaddle) ball.SetVelocity(new Vector2(ball.initialSpeed, yVelocity));
+			else ball.SetVelocity(new Vector2(-ball.initialSpeed, yVelocity));
+		}
+		else
+		{
+			Vector2 targetDirection = mouseWorldPos - transform.position;
+			ball.SetVelocity(targetDirection.normalized * ball.initialSpeed);
+		}
+
 
 		isServing = false;
 	}

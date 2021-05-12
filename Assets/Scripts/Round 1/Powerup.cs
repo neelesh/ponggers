@@ -222,7 +222,7 @@ public class Powerup : MonoBehaviour
 		else if (other.gameObject.tag == "Ball" && beenHit == false)
 		{
 			// The powerup has been hit by the ball
-			ball.lastPlayer.xp.Add(50);
+			ball.lastPlayer.xp.Add(20);
 
 			GameObject pfx = Instantiate(hitParticleEffect, transform.position, transform.rotation);
 			if (wallTilting | grow | shrink)
@@ -261,6 +261,8 @@ public class Powerup : MonoBehaviour
 				ball = other.gameObject.GetComponent<Ball>();
 
 				GameObject newBall = GameObject.Instantiate(ballPrefab);
+				newBall.GetComponent<Ball>().lastPlayer = ball.lastPlayer;
+
 				gameManager.AddBallClone(newBall);
 
 				Rigidbody2D ballRb = ball.gameObject.GetComponent<Rigidbody2D>();
