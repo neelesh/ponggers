@@ -6,6 +6,8 @@ using TMPro;
 
 public class SkillButton : MonoBehaviour
 {
+	public string skillTipText;
+	public TextMeshProUGUI skillTipArea;
 	public Button button;
 	public TextMeshProUGUI costText;
 
@@ -28,10 +30,13 @@ public class SkillButton : MonoBehaviour
 
 	private ColorBlock colorBlock;
 
+	public GameObject hudIcon;
+
 	private void Awake()
 	{
 		costText.text = cost.ToString();
 		costText.gameObject.SetActive(false);
+		hudIcon.SetActive(false);
 	}
 
 	void Start()
@@ -49,8 +54,6 @@ public class SkillButton : MonoBehaviour
 
 	void Update()
 	{
-
-
 		if (purchased) return;
 
 		if (hasPrerequisite == false && prerequisites.Count != 0)
@@ -83,6 +86,8 @@ public class SkillButton : MonoBehaviour
 
 	public void Purchase()
 	{
+		if (paddleController.xp.balance < cost) return;
+
 		costText.gameObject.SetActive(false);
 		paddleController.xp.Subtract(cost);
 		purchased = true;
@@ -91,5 +96,18 @@ public class SkillButton : MonoBehaviour
 		button.colors = colorBlock;
 		button.interactable = false;
 		paddleController.skills.UnlockSkill(skillType);
+
+		hudIcon.SetActive(true);
 	}
+
+	public void ShowSkillTip()
+	{
+		skillTipArea.text = skillTipText;
+	}
+
+	public void HideSkillTip()
+	{
+		skillTipArea.text = "";
+	}
+
 }

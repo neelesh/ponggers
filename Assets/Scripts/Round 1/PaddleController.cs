@@ -61,7 +61,6 @@ public class PaddleController : MonoBehaviour
 
 	public void ActivateSkill(Skills.SkillType skill)
 	{
-		Debug.Log("ActivateSkill( is working");
 		switch (skill)
 		{
 			case Skills.SkillType.Movement:
@@ -75,6 +74,7 @@ public class PaddleController : MonoBehaviour
 				break;
 			case Skills.SkillType.Dash:
 				dashUnlocked = true;
+				canDash = true;
 				break;
 			case Skills.SkillType.Magnetic:
 				magnet.SetActive(true);
@@ -141,8 +141,8 @@ public class PaddleController : MonoBehaviour
 			Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
 			Vector3 targetDirection = mouseWorldPos - transform.position;
 			float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
-			if (angle < -30) angle = -30;
-			else if (angle > 30) angle = 30;
+			if (angle < -45) angle = -45;
+			else if (angle > 45) angle = 45;
 			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0f, 0f, angle)), Time.time * 1);
 		}
 	}
@@ -186,14 +186,23 @@ public class PaddleController : MonoBehaviour
 		ballRB = closestBall.GetComponent<Rigidbody2D>();
 
 
-		if (canTilt)
+		if (canTilt && leftPaddle == false)
 		{
+			// Vector2 mouseScreenPos = controls.ActionMap.MousePosition.ReadValue<Vector2>();
+			// Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
 			Vector3 targetDirection = closestBall.transform.position - transform.position;
 
-			targetDirection = Quaternion.Inverse(Quaternion.Euler(targetDirection)).eulerAngles;
+			if (isServing)
+			{
+				targetDirection = mainCamera.transform.position - transform.position;
+				targetDirection = Quaternion.Inverse(Quaternion.Euler(targetDirection)).eulerAngles;
+			}
+			else targetDirection = closestBall.transform.position - transform.position;
+
+
 			float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
-			if (angle < -30) angle = -30;
-			else if (angle > 30) angle = 30;
+			// if (angle < -30) angle = -30;
+			// else if (angle > 30) angle = 30;
 			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0f, 0f, angle)), Time.time * 1);
 		}
 
@@ -394,11 +403,12 @@ public class PaddleController : MonoBehaviour
 
 
 
-	private bool canDash = true;
+	private bool canDash = false;
+	private float temp;
 
 	public void TryDash()
 	{
-		if (!dashUnlocked && canDash == false) return;
+		if (dashUnlocked == false || canDash == false) return;
 
 		StartCoroutine(Dash());
 	}
@@ -406,12 +416,14 @@ public class PaddleController : MonoBehaviour
 	IEnumerator Dash()
 	{
 		canDash = false;
-		float temp = speed;
+
+		temp = speed;
 		speed = dashSpeed;
 
 		yield return new WaitForSeconds(.1f);
 		speed = temp;
 
+		yield return new WaitForSeconds(5f);
 		canDash = true;
 	}
 }

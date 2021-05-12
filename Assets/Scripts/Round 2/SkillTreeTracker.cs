@@ -45,11 +45,9 @@ public class SkillTreeTracker : MonoBehaviour
 		lastActiveButtons.Clear();
 		foreach (var button in activeButtons) lastActiveButtons.Add(button);
 
-		try
-		{
-			if (paddle.isAIPlayer) StartCoroutine(AiBuyASkill());
-		}
-		catch (Exception e) { }
+
+		if (paddle.isAIPlayer && activeButtons.Count > 0) StartCoroutine(AiBuyASkill());
+
 
 		yield return new WaitForSeconds(5);
 		justChecked = false;
@@ -57,10 +55,8 @@ public class SkillTreeTracker : MonoBehaviour
 
 	IEnumerator AiBuyASkill()
 	{
-		if (activeButtons.Count == 0) yield return new WaitForSeconds(0f);
-
 		yield return new WaitForSeconds(3f);
 		SkillButton skillToBuy = activeButtons[UnityEngine.Random.Range(0, activeButtons.Count - 1)];
-		skillToBuy.gameObject.GetComponent<Button>().onClick.Invoke();
+		if (skillToBuy) skillToBuy.gameObject.GetComponent<Button>().onClick.Invoke();
 	}
 }
