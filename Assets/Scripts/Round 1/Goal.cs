@@ -13,7 +13,7 @@ public class Goal : MonoBehaviour
 
 	public AudioSource airhorn;
 
-	private void OnCollisionEnter2D(Collision2D other)
+	private void OnTriggerEnter2D(Collider2D other)
 	{
 		if (other.transform.tag == "Ball")
 		{
@@ -32,13 +32,13 @@ public class Goal : MonoBehaviour
 
 			if (leftGoal)
 			{
-				Instantiate(leftGoalPFX, other.contacts[0].point, transform.rotation);
+				Instantiate(leftGoalPFX, other.transform.position, transform.rotation);
 				scoreboard.RightScoredGoal();
 				gameManager.SetupServeLeft();
 			}
 			else
 			{
-				Instantiate(rightGoalPFX, other.contacts[0].point, transform.rotation);
+				Instantiate(rightGoalPFX, other.transform.position, transform.rotation);
 				scoreboard.LeftScoredGoal();
 				gameManager.SetupServeRight();
 			}

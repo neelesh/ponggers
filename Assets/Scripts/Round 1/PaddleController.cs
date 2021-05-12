@@ -141,8 +141,8 @@ public class PaddleController : MonoBehaviour
 			Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
 			Vector3 targetDirection = mouseWorldPos - transform.position;
 			float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
-			if (angle < -45) angle = -45;
-			else if (angle > 45) angle = 45;
+			// if (angle < -45) angle = -45;
+			// else if (angle > 45) angle = 45;
 			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0f, 0f, angle)), Time.time * 1);
 		}
 	}
@@ -192,7 +192,7 @@ public class PaddleController : MonoBehaviour
 			// Vector3 mouseWorldPos = mainCamera.ScreenToWorldPoint(mouseScreenPos);
 			Vector3 targetDirection = closestBall.transform.position - transform.position;
 
-			if (isServing)
+			if (isServing | Mathf.Abs(closestBall.transform.position.x - gameObject.transform.position.x) < 2)
 			{
 				targetDirection = mainCamera.transform.position - transform.position;
 				targetDirection = Quaternion.Inverse(Quaternion.Euler(targetDirection)).eulerAngles;
@@ -203,7 +203,7 @@ public class PaddleController : MonoBehaviour
 			float angle = Mathf.Atan2(targetDirection.y, targetDirection.x) * Mathf.Rad2Deg;
 			// if (angle < -30) angle = -30;
 			// else if (angle > 30) angle = 30;
-			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0f, 0f, angle)), Time.time * 1);
+			transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(new Vector3(0f, 0f, angle)), Time.deltaTime * 4f);
 		}
 
 

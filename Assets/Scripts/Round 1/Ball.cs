@@ -26,6 +26,8 @@ public class Ball : MonoBehaviour
 
 		rb = GetComponent<Rigidbody2D>();
 		// rb.velocity = new Vector2(initialSpeed, initialSpeed);
+		if (trailRenderer.emitting == false) trailRenderer.emitting = true;
+
 
 		scale = transform.localScale;
 		firePFX.Stop();

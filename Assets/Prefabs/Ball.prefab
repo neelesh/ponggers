@@ -4998,7 +4998,7 @@ MonoBehaviour:
   minSpeed: 3
   fireballSpeed: 20
   fireball: 0
-  serving: 1
+  serving: 0
   lastPlayer: {fileID: 0}
   firePFX: {fileID: 8360196254217172646}
   trailRenderer: {fileID: 2184820669083205740}
